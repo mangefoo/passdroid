@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+
+<Preference
+  android:key="change_password"
+  android:title="Change master password">
+  
+   <intent android:action="com.kodholken.passdroid.CHANGE_PASSWORD"/>
+</Preference>    
+
+<CheckBoxPreference
+  android:key="idle_logout"
+  android:title="Enable idle logout"
+  android:defaultValue="true"
+  android:summary="Automatic logout after a specified number of idle seconds."/>
+
+<EditTextPreference
+  android:key="idle_logout_time"
+  android:title="Idle logout time"
+  android:enabled="true"
+  android:numeric="integer" 
+  android:maxLength="4"
+  android:defaultValue="60"/>
+<!--    android:summary="Number of seconds of idle time before logging out."/> -->
+
+<CheckBoxPreference
+  android:key="display_username"
+  android:title="Display username"
+  android:defaultValue="true"
+  android:summary="Show the username in addition to the system in the list of passwords."/>
+  
+</PreferenceScreen>
