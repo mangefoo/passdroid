@@ -22,6 +22,8 @@ package com.kodholken.passdroid;
 import com.kodholken.passdroid.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -61,6 +63,7 @@ public class ChangePassword extends Activity {
         SystemData systemData = new SystemData(this);
         if (!Crypto.verifyPassword(oldPassword, systemData.getKey())) {
         	Utils.alertDialog(this, "Invalid password", "The master password entered is incorrect.");
+        	oldPasswordView.requestFocus();
         	oldPasswordView.selectAll();
         	
         	return ;
@@ -73,7 +76,27 @@ public class ChangePassword extends Activity {
 		String newPassword2 = newPassword2View.getText().toString();
 		if (!newPassword1.equals(newPassword2)) {
 			Utils.alertDialog(this, "Passwords mismatch", "The new passwords you entered does not match.");
+			newPassword1View.requestFocus();
+			newPassword1View.selectAll();
 			return;
+		}
+		
+		if (DBMigration.changePassword(this, oldPassword, newPassword1)) {
+			Session.getInstance().setKey(Crypto.hmacFromPassword(newPassword1));
+			
+			AlertDialog alertDialog;
+			
+		    alertDialog = new AlertDialog.Builder(this).create();
+		    alertDialog.setTitle("Password changed");
+		    alertDialog.setMessage("The password was changed successfully.");
+		    alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+		      public void onClick(DialogInterface dialog, int which) {
+		    	finish();
+		        return;
+		      } }); 
+		    alertDialog.show();
+		} else {
+			Utils.alertDialog(this, "Password change failed", "There was a failure when changing the password.");
 		}
 	}
 }
