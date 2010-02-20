@@ -26,5 +26,5 @@ public class Constants {
 	
 	public static final boolean CLEARDB = false;
 	
-	public static final int DEFAULT_IDLE_LOGOUT = 10;
+	public static final int DEFAULT_IDLE_LOGOUT = 300;
 }

@@ -17,11 +17,11 @@
 
 <EditTextPreference
   android:key="idle_logout_time"
-  android:title="Idle logout time"
+  android:title="Idle logout time (seconds)"
   android:enabled="true"
   android:numeric="integer" 
   android:maxLength="4"
-  android:defaultValue="60"/>
+  android:defaultValue="300"/>
 <!--    android:summary="Number of seconds of idle time before logging out."/> -->
 
 <CheckBoxPreference
