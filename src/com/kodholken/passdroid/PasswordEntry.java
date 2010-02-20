@@ -22,6 +22,7 @@ package com.kodholken.passdroid;
 import java.util.Random;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class PasswordEntry implements Comparable<PasswordEntry> {
@@ -47,6 +48,17 @@ public class PasswordEntry implements Comparable<PasswordEntry> {
 		encPassword = encrypt(key, decPassword);
 	}
 	
+	public void convertEcbToCbc(byte [] key) {
+		encSystem   = ecbToCbc(key, encSystem);
+		encUsername = ecbToCbc(key, encUsername);
+		encPassword = ecbToCbc(key, encPassword);
+	}
+	
+	private String ecbToCbc(byte [] key, String encrypted) {
+		String decrypted = decryptEcb(key, encrypted);
+		return encrypt(key, decrypted);
+	}
+	
 	private String encrypt(byte [] key, String clear) {
 		byte [] encrypted;
 		byte [] salt = new byte[2];
@@ -54,9 +66,10 @@ public class PasswordEntry implements Comparable<PasswordEntry> {
 		SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 		try {
 			Random rnd = new Random();
-			//Cipher cipher = Cipher.getInstance("AES");
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS7Padding", "BC"); 
-			cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
+			byte [] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			IvParameterSpec ivSpec = new IvParameterSpec(iv);
+			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivSpec);
 			rnd.nextBytes(salt);
 			cipher.update(salt);
 			encrypted = cipher.doFinal(clear.getBytes());
@@ -69,6 +82,29 @@ public class PasswordEntry implements Comparable<PasswordEntry> {
 	}
 	
 	private String decrypt(byte [] key, String encrypted) {
+		String decrypted;
+		byte [] decBytes;
+		
+		try {
+			byte [] encBytes = Base64.decode(encrypted);
+
+			SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");  
+			//Cipher cipher = Cipher.getInstance("AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding", "BC");
+			byte [] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			IvParameterSpec ivSpec = new IvParameterSpec(iv);
+			cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivSpec);
+			decBytes = cipher.doFinal(encBytes);
+			decrypted = new String(decBytes, 2, decBytes.length - 2, "UTF8");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+			
+		return decrypted;
+	}
+	
+	private String decryptEcb(byte [] key, String encrypted) {
 		String decrypted;
 		byte [] decBytes;
 		

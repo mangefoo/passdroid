@@ -107,11 +107,24 @@ public class SystemData extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	public void updateAttribute(String attr, String value) {
+		SQLiteDatabase db = getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("value", value);
+		String [] whereArgs = { attr };
+		db.update("system", values, "attribute=?", whereArgs);
+		db.close();		
+	}
+	
 	public void setKey(String value) {
 		setAttribute("key", value);
 	}
 	
 	public void setVersion(String value) {
 		setAttribute("version", value);	
+	}
+	
+	public void updateVersion(String value) {
+		updateAttribute("version", value);
 	}
 }

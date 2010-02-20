@@ -69,8 +69,7 @@ public class Main extends Activity {
         	String dbVersion = system.getVersion();
 
         	if (!dbVersion.equals(appVersion)) {
-        		DBMigration.migrate(dbVersion, appVersion);
-        		// Upgrade database
+        		DBMigration.preLoginMigration(this, dbVersion, appVersion);
         	}
     	}
  

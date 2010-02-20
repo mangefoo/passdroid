@@ -55,6 +55,10 @@ public class Utils {
 		Log.d("Passdroid", message);
 	}
 	
+	public static void error(String message) {
+		Log.e("Passdroid", message);
+	}
+	
 	public static String getVersion(Context context) throws RuntimeException {
 		try {
 			return context.getPackageManager()

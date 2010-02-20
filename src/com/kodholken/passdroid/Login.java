@@ -95,12 +95,27 @@ public class Login extends Activity {
 			if (verifyPassword(password)) {
 				Session.getInstance().setKey(Crypto.hmacFromPassword(password));
 				Session.getInstance().setLoggedIn();
+				
+				handleVersionChange();
 				Utils.startPasswordsView(this);
 			} else {
 				Utils.alertDialog(this, "Failure", "The supplied password was incorrect.");
 				((EditText) findViewById(R.id.login_password)).selectAll();
 			}
 		}	
+	}
+	
+	private void handleVersionChange() {
+    	SystemData system = new SystemData(this);
+		String dbVersion = system.getVersion();
+    	String appVersion = Utils.getVersion(this);
+    	
+    	if (!dbVersion.equals(appVersion)) {
+    		if (DBMigration.postLoginMigration(this, dbVersion, appVersion)) {
+    			Utils.debug("Setting version to " + appVersion);
+    			system.updateVersion(appVersion);
+    		}
+    	}
 	}
 		
 	private boolean verifyPassword(String password) {
