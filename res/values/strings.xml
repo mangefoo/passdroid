@@ -15,6 +15,8 @@ Passdroid is an application that lets you store your passwords in a secure way o
 Android device. The application use AES and SHA-256 to store the passwords on the device \
 to prevent access without the master password.\n\
 \n\
+Version ${VERSION} \n
+\n\
 Copyright &#169; 2009-2010  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
 \n\
 Application icon by VisualPharm (http://www.visualpharm.com/).\n\

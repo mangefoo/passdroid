@@ -23,11 +23,16 @@ import com.kodholken.passdroid.R;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class About extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
+		
+		getString(R.string.about_text);
+		((TextView) findViewById(R.id.about_content)).setText(
+				getString(R.string.about_text).replace("${VERSION}", Utils.getVersion(this)));
 	}
 }
