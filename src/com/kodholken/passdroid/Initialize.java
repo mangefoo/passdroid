@@ -19,9 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import java.util.Random;
-import java.util.zip.CRC32;
-
 import com.kodholken.passdroid.R;
 
 
@@ -69,28 +66,7 @@ public class Initialize extends Activity {
 	}
 
 	private void initialize(String masterPassword) {
-		Random rnd = new Random();
-		byte [] key = new byte[32];
-		rnd.nextBytes(key);
-	
-		CRC32 crc = new CRC32();
-		crc.update(key, 0, 28);
-		long crcValue = crc.getValue();
-		key[28] = (byte) ((crcValue >> 24) & 0xff);
-		key[29] = (byte) ((crcValue >> 16) & 0xff);
-		key[30] = (byte) ((crcValue >> 8) & 0xff);
-		key[31] = (byte) (crcValue & 0xff);
-
-		byte [] pwdHmac = Crypto.hmacFromPassword(masterPassword);
-		
-		assert(key.length != pwdHmac.length);
-		
-		byte [] xor = new byte[key.length];
-		for (int i = 0; i < key.length; i++) {
-			xor[i] =(byte) (key[i] ^ pwdHmac[i]);
-		}
-		
-		String xorString = Base64.encode(xor);
+		String xorString = Utils.generateKey(masterPassword);
 		
 		SystemData system = new SystemData(this);
 		system.setAttribute("key", xorString);

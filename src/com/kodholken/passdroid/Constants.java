@@ -24,8 +24,6 @@ public class Constants {
 	public static final String  DBNAME = "password.db";
 	public static final int     DBVERSION = 1;
 	
-	public static final String APP_VERSION = "0.9";
-	
 	public static final boolean CLEARDB = false;
 	
 	public static final int DEFAULT_IDLE_LOGOUT = 10;

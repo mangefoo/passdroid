@@ -53,6 +53,8 @@ public class Main extends Activity {
     }
     
     private void startup() {
+    	String appVersion = Utils.getVersion(this);
+
     	if (Session.getInstance().isLoggedIn()) {
     		Utils.startPasswordsView(this);
     		return;
@@ -60,10 +62,16 @@ public class Main extends Activity {
 
     	SystemData system = new SystemData(this);
     	system.verifyTable();
+    	
     	if (!system.hasVersion()) {
-    		system.setVersion(Constants.APP_VERSION);
-    	} else if (!system.getVersion().equals(Constants.APP_VERSION)) {
-    		// Upgrade database
+    		system.setVersion(appVersion);
+    	} else {
+        	String dbVersion = system.getVersion();
+
+        	if (!dbVersion.equals(appVersion)) {
+        		DBMigration.migrate(dbVersion, appVersion);
+        		// Upgrade database
+        	}
     	}
  
     	if (system.hasKey()) {

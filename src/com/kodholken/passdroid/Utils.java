@@ -19,10 +19,14 @@
 
 package com.kodholken.passdroid;
 
+import java.util.Random;
+import java.util.zip.CRC32;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 public class Utils {
@@ -49,5 +53,40 @@ public class Utils {
 	
 	public static void debug(String message) {
 		Log.d("Passdroid", message);
+	}
+	
+	public static String getVersion(Context context) throws RuntimeException {
+		try {
+			return context.getPackageManager()
+				   .getPackageInfo(context.getPackageName(), 0)
+				   .versionName;
+		} catch(NameNotFoundException ex) {
+			throw new RuntimeException("Failed to get app version");
+		}
+	}
+	
+	public static String generateKey(String masterPassword) {
+		Random rnd = new Random();
+		byte[] key = new byte[32];
+		rnd.nextBytes(key);
+
+		CRC32 crc = new CRC32();
+		crc.update(key, 0, 28);
+		long crcValue = crc.getValue();
+		key[28] = (byte) ((crcValue >> 24) & 0xff);
+		key[29] = (byte) ((crcValue >> 16) & 0xff);
+		key[30] = (byte) ((crcValue >> 8) & 0xff);
+		key[31] = (byte) (crcValue & 0xff);
+
+		byte[] pwdHmac = Crypto.hmacFromPassword(masterPassword);
+
+		assert (key.length != pwdHmac.length);
+
+		byte[] xor = new byte[key.length];
+		for (int i = 0; i < key.length; i++) {
+			xor[i] = (byte) (key[i] ^ pwdHmac[i]);
+		}
+
+		return Base64.encode(xor);
 	}
 }
