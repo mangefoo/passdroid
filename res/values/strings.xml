@@ -11,11 +11,13 @@
 <!-- About -->
 <string name="about_title">About Passdroid</string>
 <string name="about_text">\
-Passdroid is an application that lets you store your passwords in a secure way on your \
+Passdroid is an open source application that lets you store your passwords in a secure way on your \
 Android device. The application use AES and SHA-256 to store the passwords on the device \
 to prevent access without the master password.\n\
 \n\
 Version ${VERSION} \n
+\n\
+http://passdroid.kodholken.com/\n\
 \n\
 Copyright &#169; 2009-2010  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
 \n\
@@ -66,6 +68,8 @@ and press OK.</string>
 <string name="options_edit">Edit</string>
 <string name="options_delete">Delete</string>
 
+<string name="add_password_text">Add Password</string>
+<string name="empty_list_help">Press the menu button and choose <b>Add Password</b> to create new password entries.</string>
 
 <string name="settings_title">Settings</string>
 

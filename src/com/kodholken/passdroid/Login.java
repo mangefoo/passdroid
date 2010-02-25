@@ -99,7 +99,7 @@ public class Login extends Activity {
 				handleVersionChange();
 				Utils.startPasswordsView(this);
 			} else {
-				Utils.alertDialog(this, "Failure", "The supplied password was incorrect.");
+				Utils.alertDialog(this, "Login Failure", "The supplied password was incorrect.");
 				((EditText) findViewById(R.id.login_password)).selectAll();
 			}
 		}	

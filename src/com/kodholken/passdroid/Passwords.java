@@ -60,6 +60,7 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	private ListView list;
 	private int listPosition;
 	
+	private TextView     emptyListHelp;
 	private LinearLayout countdownLayout;
 	private TextView     countdownTextView;
 	private int          countdownValue;
@@ -91,6 +92,8 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		loadSettingsOnResume = true; // Make sure settings are loaded on first run
 		Session.getInstance().setNeedReload(true);
 		Session.getInstance().setIdleLogoutCallback(this);
+		
+		emptyListHelp = (TextView) findViewById(com.kodholken.passdroid.R.id.empty_list_help);
 		
 		getListView().setTextFilterEnabled(true);
 		
@@ -296,6 +299,14 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		}
 		
 		setListAdapter(new ArrayAdapter<String>(this, R.layout.password_row, listEntries));
+		
+		if (listEntries.length == 0) {
+			emptyListHelp.setVisibility(View.VISIBLE);
+			list.setVisibility(View.GONE);
+		} else {
+			emptyListHelp.setVisibility(View.GONE);
+			list.setVisibility(View.VISIBLE);
+		}
 	}
 	
 	private void loadSettings() {
