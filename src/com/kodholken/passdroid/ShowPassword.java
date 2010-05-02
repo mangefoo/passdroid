@@ -67,12 +67,14 @@ public class ShowPassword extends Activity {
 
 		((TextView) findViewById(R.id.system)).setText(system);
 		TextView usernameView = (TextView) findViewById(R.id.username);
+		TextView usernameHeaderView = (TextView) findViewById(R.id.username_header);
 		if (username.length() > 0) {
-			usernameView.setText("Username: " + username);
+			usernameView.setText(username);
 		} else {
 			usernameView.setVisibility(View.GONE);
+			usernameHeaderView.setVisibility(View.GONE);
 		}
-		((TextView) findViewById(R.id.password)).setText("Password: " + password);
+		((TextView) findViewById(R.id.password)).setText(password);
 		
 		editButton = (Button) this.findViewById(R.id.edit_button);
 		editButton.setOnClickListener(new OnClickListener() {

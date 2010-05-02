@@ -1,38 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:minWidth="250px"
-  android:layout_width="wrap_content"
+  android:layout_width="250px"
   android:layout_height="wrap_content"
   android:orientation="vertical"
-  android:padding="20px">
+  android:background="@drawable/gradient">
 
   <TextView
     android:text="test"
     android:id="@+id/system"
     android:textSize="22px"
-    android:textStyle="bold"
+    android:textColor="#ffffff"
     android:gravity="center_horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:paddingTop="10dip"/>
     
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="20dip">
+    	  
   <TextView
     android:text=""
     android:textSize="14px"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+   
+  <TextView
+    android:text="Username"
+    android:id="@+id/username_header"
+    android:textSize="5pt"
+    android:textColor="#ffffff"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
     
   <TextView
     android:text=""
     android:id="@+id/username"
-    android:textSize="18px"
+    android:textSize="20px"
+    android:paddingBottom="10dip"
+    android:textColor="#ffffff"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+
+  <TextView
+    android:text="Password"
+    android:textSize="5pt"
+    android:textColor="#ffffff"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
     
   <TextView
     android:text=""
     android:id="@+id/password"
-    android:textSize="18px"
+    android:textSize="20px"
+    android:textColor="#ffffff"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
 
@@ -40,17 +64,22 @@
     android:text=""
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"/>
+    
+  </LinearLayout>
 
   <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="#cccccc"
+	android:paddingTop="5dip">
     
     <Button
       android:id="@+id/edit_button"
       android:layout_weight="1"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
+      android:singleLine="true"
       android:text="Edit"/>
 
     <Button
@@ -58,6 +87,7 @@
       android:layout_weight="1"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
+      android:singleLine="true"
       android:text="Delete"/>
 
   </LinearLayout>

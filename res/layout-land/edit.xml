@@ -1,88 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
   android:layout_width="440px"
-  android:layout_height="fill_parent"
-  android:paddingLeft="20px"
-  android:paddingRight="20px"
-  android:paddingBottom="20px">
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:background="@drawable/gradient">
 
-  <!-- System -->
+  <TextView
+    android:text="test"
+    android:id="@+id/header"
+    android:textSize="18px"
+    android:textColor="#ffffff"
+    android:gravity="center_horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dip"
+    android:paddingBottom="5dip"/>
+  
   <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-    
-    <TextView
-      android:text="System"
-      android:textSize="5pt"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"/>
-          
-    <EditText
-      android:id="@+id/system"
-      android:singleLine="true"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"/>
-  </LinearLayout>
-  
-  <!-- Username / Password container -->
-  <LinearLayout
-    android:orientation="horizontal"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
-  
-    <!-- Username -->
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingBottom="20dip">
+      
+    <!-- System -->
     <LinearLayout
       android:orientation="vertical"
       android:layout_width="fill_parent"
-      android:layout_weight="1"
       android:layout_height="wrap_content">
     
       <TextView
-        android:text="Username"
+        android:text="System"
         android:textSize="5pt"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
           
       <EditText
-        android:id="@+id/username"
+        android:id="@+id/system"
         android:singleLine="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
     </LinearLayout>
-    
-    <!-- Password -->
-    <LinearLayout
-      android:orientation="vertical"
-      android:layout_width="fill_parent"
-      android:layout_weight="1"
-      android:layout_height="wrap_content">
-    
-      <TextView
-        android:text="Password"
-        android:textSize="5pt"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-          
-      <EditText
-        android:id="@+id/password"
-        android:singleLine="true"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    </LinearLayout>
-  </LinearLayout>
   
-
-    <TextView
-      android:textSize="5pt"
+    <!-- Username / Password container -->
+    <LinearLayout
+      android:orientation="horizontal"
       android:layout_width="fill_parent"
-      android:layout_height="wrap_content"/>
+      android:layout_height="wrap_content">
+  
+      <!-- Username -->
+      <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:paddingRight="5dip">
+    
+        <TextView
+          android:text="Username"
+          android:textSize="5pt"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"/>
+          
+        <EditText
+          android:id="@+id/username"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+    
+      <!-- Password -->
+      <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dip">
+    
+        <TextView
+          android:text="Password"
+          android:textSize="5pt"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"/>
+          
+        <EditText
+          android:id="@+id/password"
+          android:singleLine="true"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"/>
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout> 
   
   <LinearLayout
     android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="wrap_content"
+    android:background="#cccccc"
+	android:paddingTop="5dip">
   
     <Button
       android:id="@+id/save_button"
