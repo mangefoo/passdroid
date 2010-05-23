@@ -9,7 +9,7 @@
   
   <TextView
     android:text="@string/login_text"
-    android:textSize="16px"
+    android:textSize="14dip"
     android:gravity="center_horizontal"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"/>
@@ -19,12 +19,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:maxLines="1"
-    android:password="true"/>
-
-  <TextView
-    android:textSize="5pt"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"/>
+    android:password="true"
+    android:layout_marginBottom="5pt"/>
 
   <Button
     android:id="@+id/login_button"
