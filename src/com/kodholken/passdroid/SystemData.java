@@ -58,7 +58,6 @@ public class SystemData extends SQLiteOpenHelper {
 		
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor cur = db.rawQuery("SELECT count(*) FROM system WHERE attribute = ?", new String[] { attr });
-		System.out.println("Number of " + attr + " rows: " + cur.getCount());
 		if (cur.moveToNext()) {
 			result = cur.getInt(0) > 0;
 		}

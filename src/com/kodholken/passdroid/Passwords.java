@@ -39,7 +39,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -55,7 +54,6 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	private boolean hasBackKeyDown;
 	private PasswordData passwordData;
 	private PasswordEntry [] passwords;
-	private String [] listEntries;
 	private boolean loadSettingsOnResume;
 	private ListView list;
 	private int listPosition;
@@ -260,7 +258,6 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		
 		alertDialog.setButton(AlertDialog.BUTTON2, "No", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				System.out.println("User choosed no");
 			}
 		});
 		
@@ -289,6 +286,7 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		db.close();
 		
 		Arrays.sort(passwords);
+		/*
 		listEntries = new String[passwords.length];
 		for (i = 0; i < listEntries.length; i++) {
 			listEntries[i] = passwords[i].getDecSystem();
@@ -299,8 +297,12 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		}
 		
 		setListAdapter(new ArrayAdapter<String>(this, R.layout.password_row, listEntries));
+		*/
 		
-		if (listEntries.length == 0) {
+		setListAdapter(new PasswordAdapter(this, passwords,
+				PreferenceManager.getDefaultSharedPreferences(this).getBoolean("display_username", true))); 
+		
+		if (passwords.length == 0) {
 			emptyListHelp.setVisibility(View.VISIBLE);
 			list.setVisibility(View.GONE);
 		} else {

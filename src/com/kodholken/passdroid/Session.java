@@ -160,17 +160,13 @@ public class Session {
 	}
 
 	public void setIdleLogout(boolean idleLogout) {
-		System.out.println("Setting idle logout to " + idleLogout);
-
 		if (!idleLogout) {
 			cancelLogoutTimer();
 		}
 		this.idleLogout = idleLogout;
 	}
 	
-	public void setIdleLogoutTime(int idleLogoutTime) {
-		System.out.println("Setting idle logout time to " + idleLogoutTime);
-		
+	public void setIdleLogoutTime(int idleLogoutTime) {		
 		this.idleLogoutTime = idleLogoutTime;
 		if (idleLogout) {
 			bumpLogoutTimer();

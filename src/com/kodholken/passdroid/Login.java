@@ -56,7 +56,6 @@ public class Login extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		System.out.println("onResume()");
 		if (Session.getInstance().isLoggedIn()) {
 			finish();
 		}

@@ -52,7 +52,6 @@ public class Add extends Activity {
 		  @Override
 		  public void onClick(View v) {
 			  addPassword();
-			  System.out.println("Clicked");
 		  }
 		});
 	}
