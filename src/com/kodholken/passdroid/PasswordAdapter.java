@@ -60,6 +60,7 @@ public class PasswordAdapter extends BaseAdapter {
 		holder.system.setText(entries[position].getDecSystem());
 		if (showUsername && entries[position].getDecUsername().length() > 0) {
 			holder.username.setText(entries[position].getDecUsername());
+			holder.username.setVisibility(View.VISIBLE);
 		} else {
 			holder.username.setVisibility(View.GONE);
 		}
