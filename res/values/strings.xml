@@ -67,10 +67,34 @@ and press OK.</string>
 <string name="options_logout">Logout</string>
 <string name="options_edit">Edit</string>
 <string name="options_delete">Delete</string>
+<string name="options_impexp">Import / Export</string>
 
 <string name="add_password_text">Add Password</string>
 <string name="empty_list_help">Press the menu button and choose <b>Add Password</b> to create new password entries.</string>
 
 <string name="settings_title">Settings</string>
+
+<string name="file_export_title">Export passwords to file</string>
+<string name="file_import_title">Import passwords from file</string>
+
+<string name="export_description">\
+This will export the password database to a file on your phone or SD card. \
+In combination with the import function this can be used to move the \
+password database between Passdroid devices or as a way to back up your data. \
+Please note that the data in the export files is stored unencrypted so make sure it is \
+removed from the phone as quickly as possible and stored securely.</string>
+
+<string name="import_description">\
+This will import a database of passwords that has been exported from Passdroid. \
+The import will remove any existing passwords on this device.</string>
+
+<string name="import_description_file_present">\
+The file %f contains %n entries.</string>
+
+<string name="import_description_file_missing">\
+Import not available. To enable it copy your exported password file to\n
+<b>%f</b>.</string>
+
+<string name="import_description_failure">Failed to read %f: %e.</string>
 
 </resources>

@@ -12,7 +12,7 @@
         </activity>
         
         <activity android:label="@string/passwords"
-                  android:name=".Passwords"
+                  android:name=".PasswordActivity"
                   android:theme="@android:style/Theme.Black.NoTitleBar"/>
         
         <activity android:label="@string/about_title"
@@ -51,7 +51,27 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-                            
+
+        <activity android:label="@string/file_export_title"
+                  android:theme="@android:style/Theme.Dialog"        
+                  android:name=".FileExportActivity">
+                  
+            <intent-filter>
+                <action android:name="com.kodholken.passdroid.FILE_EXPORT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        
+        <activity android:label="@string/file_import_title"
+                  android:theme="@android:style/Theme.Dialog"        
+                  android:name=".FileImportActivity">
+                  
+            <intent-filter>
+                <action android:name="com.kodholken.passdroid.FILE_IMPORT"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        
     </application>
     <uses-sdk android:minSdkVersion="3" />
-</manifest> 
+</manifest>

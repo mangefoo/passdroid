@@ -81,7 +81,7 @@ public class Main extends Activity {
     }
     
     public void startPassword() {
-		  Intent i = new Intent(this, Passwords.class);
+		  Intent i = new Intent(this, PasswordActivity.class);
 		  startActivity(i);
     }
     

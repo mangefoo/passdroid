@@ -1,6 +1,7 @@
 package com.kodholken.passdroid;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +51,7 @@ public class PasswordAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.system = (TextView) convertView.findViewById(R.id.system);
 			holder.username = (TextView) convertView.findViewById(R.id.username);
+			holder.separator = (TextView) convertView.findViewById(R.id.separator);
 
 			convertView.setTag(holder);
 		} else {
@@ -61,8 +63,15 @@ public class PasswordAdapter extends BaseAdapter {
 		if (showUsername && entries[position].getDecUsername().length() > 0) {
 			holder.username.setText(entries[position].getDecUsername());
 			holder.username.setVisibility(View.VISIBLE);
+			holder.separator.setVisibility(View.VISIBLE);
 		} else {
+			// Use non-bold font when we don't display the username
+			if (!showUsername) {
+				Typeface tf = holder.system.getTypeface();
+				holder.system.setTypeface(Typeface.create(tf, Typeface.NORMAL));
+			}
 			holder.username.setVisibility(View.GONE);
+			holder.separator.setVisibility(View.GONE);
 		}
 
 		return convertView;
@@ -71,6 +80,7 @@ public class PasswordAdapter extends BaseAdapter {
 	static class ViewHolder {
 		TextView system;
 		TextView username;
+		TextView separator;
 	}
 
 }

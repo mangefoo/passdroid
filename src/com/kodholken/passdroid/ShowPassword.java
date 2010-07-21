@@ -113,7 +113,6 @@ public class ShowPassword extends Activity {
 		
 		alertDialog.setButton(AlertDialog.BUTTON1, "Yes", new DialogInterface.OnClickListener() { 
 			public void onClick(DialogInterface dialog, int which) {
-				Utils.debug("User choosed yes");
 				deletePassword();
 				Session.getInstance().setNeedReload(true);
 			}
@@ -121,7 +120,6 @@ public class ShowPassword extends Activity {
 		
 		alertDialog.setButton(AlertDialog.BUTTON2, "No", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Utils.debug("User choosed no");
 			}
 		});
 		

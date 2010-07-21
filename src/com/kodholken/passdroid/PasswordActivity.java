@@ -19,16 +19,11 @@
 
 package com.kodholken.passdroid;
 
-import java.util.Arrays;
-
-import com.kodholken.passdroid.R;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,7 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class Passwords extends ListActivity implements IdleLogoutCallback {
+public class PasswordActivity extends ListActivity implements IdleLogoutCallback, PasswordModelListener {
 	private static final int OPTION_MENU_ADD      = 1;
 	private static final int OPTION_MENU_SEARCH   = 2;
 	private static final int OPTION_MENU_SETTINGS = 3;
@@ -52,8 +47,6 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	private static final int OPTION_MENU_LOGOUT   = 6;
 	
 	private boolean hasBackKeyDown;
-	private PasswordData passwordData;
-	private PasswordEntry [] passwords;
 	private boolean loadSettingsOnResume;
 	private ListView list;
 	private int listPosition;
@@ -64,7 +57,7 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	private int          countdownValue;
 	private Handler      countdownHandler;
 	
-	public Passwords() {
+	public PasswordActivity() {
 		loadSettingsOnResume = false;
 		hasBackKeyDown = false;
 		countdownLayout = null;
@@ -79,12 +72,9 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 			finish();
 			return ;
 		}
-				
-		passwordData = new PasswordData(this);
-		passwordData.verifyTable(); // Make sure data table exist
 		
 		setContentView(R.layout.password);
-		
+				
 		list = (ListView) findViewById(android.R.id.list);
 		
 		loadSettingsOnResume = true; // Make sure settings are loaded on first run
@@ -112,6 +102,8 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		getWindow().addContentView(countdownLayout, params);
 		
 		countdownHandler = new Handler();
+		
+		PasswordModel.getInstance(this).addListener(this);
 	}
 	
 	@Override
@@ -152,7 +144,7 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 		
 		item = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE, getString(R.string.options_about));
 		item.setIcon(android.R.drawable.ic_menu_info_details);
-
+		
 		item = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE, getString(R.string.options_logout));
 		item.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 
@@ -204,12 +196,14 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
+
+		PasswordModel model = PasswordModel.getInstance(this);
 		
 		Intent i = new Intent(this, ShowPassword.class);
-		i.putExtra("id",       passwords[position].getId());
-		i.putExtra("system",   passwords[position].getDecSystem());
-		i.putExtra("username", passwords[position].getDecUsername());
-		i.putExtra("password", passwords[position].getDecPassword());
+		i.putExtra("id",       model.getAt(position).getId());
+		i.putExtra("system",   model.getAt(position).getDecSystem());
+		i.putExtra("username", model.getAt(position).getDecUsername());
+		i.putExtra("password", model.getAt(position).getDecPassword());
 		
 		listPosition = list.getFirstVisiblePosition();
 		
@@ -265,44 +259,11 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 	}
 		
 	private void loadPasswords() {
-		final String [] columns = { "id", "system", "username", "password" };
-		SQLiteDatabase db = passwordData.getReadableDatabase();
-		Cursor cur = db.query("data", columns, null, null, null, null, "id DESC");
-
-		int i = 0;
-		passwords = new PasswordEntry[cur.getCount()];
-		while (cur.moveToNext()) {
-			passwords[i] = new PasswordEntry();
-			passwords[i].setId(cur.getInt(0));
-			passwords[i].setEncSystem(cur.getString(1));
-			passwords[i].setEncUsername(cur.getString(2));
-			passwords[i].setEncPassword(cur.getString(3));
-			
-			passwords[i].decryptAll(Session.getInstance().getKey());
-			
-			i++;
-		}
-		cur.close();
-		db.close();
-		
-		Arrays.sort(passwords);
-		/*
-		listEntries = new String[passwords.length];
-		for (i = 0; i < listEntries.length; i++) {
-			listEntries[i] = passwords[i].getDecSystem();
-			if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("display_username", true) &&
-				passwords[i].getDecUsername().length() > 0) {
-				listEntries[i] += " (" + passwords[i].getDecUsername() + ")"; 
-			}
-		}
-		
-		setListAdapter(new ArrayAdapter<String>(this, R.layout.password_row, listEntries));
-		*/
-		
-		setListAdapter(new PasswordAdapter(this, passwords,
+		PasswordEntry [] entries = PasswordModel.getInstance(this).getPasswords();
+		setListAdapter(new PasswordAdapter(this, entries,
 				PreferenceManager.getDefaultSharedPreferences(this).getBoolean("display_username", true))); 
 		
-		if (passwords.length == 0) {
+		if (entries.length == 0) {
 			emptyListHelp.setVisibility(View.VISIBLE);
 			list.setVisibility(View.GONE);
 		} else {
@@ -344,5 +305,10 @@ public class Passwords extends ListActivity implements IdleLogoutCallback {
 				countdownLayout.setVisibility(View.INVISIBLE);
 			}
 		});
+	}
+
+	@Override
+	public void onPasswordModelChange(PasswordModel model) {
+		loadPasswords();
 	}
 }
