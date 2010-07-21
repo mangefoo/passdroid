@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       android:versionCode="5"
-      package="com.kodholken.passdroid" android:versionName="1.0">
+      package="com.kodholken.passdroid" android:versionName="1.1">
     <application android:icon="@drawable/safe_icon" android:label="@string/app_name">
         <activity android:label="@string/app_name" android:name="Main"
         		  android:theme="@android:style/Theme.Black.NoTitleBar">
