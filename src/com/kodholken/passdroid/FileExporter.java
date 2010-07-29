@@ -29,12 +29,15 @@ public class FileExporter {
 			ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			ps.println("<passdroid version=\"" + appVersion + "\">");
 			for (PasswordEntry entry : passwords) {
+				//String system = "<![CDATA[" + entry.getDecSystem().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
 				ps.println("  <system name=\"" + entry.getDecSystem() + "\">");
 				if (entry.getDecUsername() != null) {
-					ps.println("    <username>" + entry.getDecUsername() + "</username>");
+					String username = "<![CDATA[" + entry.getDecUsername().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
+					ps.println("    <username>" + username + "</username>");
 				}
 				if (entry.getDecPassword() != null) {
-					ps.println("    <password>" + entry.getDecPassword() + "</password>");
+					String password = "<![CDATA[" + entry.getDecPassword().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
+					ps.println("    <password>" + password + "</password>");
 				}
 				ps.println("  </system>");
 			}
