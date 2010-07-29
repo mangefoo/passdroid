@@ -48,9 +48,11 @@ public class FileExportActivity extends Activity {
 	}
 	
 	private void doExport() {
-		FileExporter exporter = new FileExporter(exportFilename.getText().toString());
+		FileExporter exporter = new FileExporter(
+										exportFilename.getText().toString(),
+										Utils.getVersion(this));
 		try {
-			boolean res = exporter.export(Utils.getVersion(this), PasswordModel.getInstance(this).getPasswords(), true);
+			boolean res = exporter.export(PasswordModel.getInstance(this).getPasswords(), true);
 			if (res) {
 				showDialog("Success", "Database successfully exported to " + exportFilename.getText().toString());
 			} else {

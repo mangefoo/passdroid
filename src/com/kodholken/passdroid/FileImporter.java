@@ -18,11 +18,13 @@ import android.util.Log;
 
 public class FileImporter {
 	private String filename;
+	private String appVersion;
 	private boolean loaded;
 	private PasswordEntry[] passwordEntries;
 	
-	public FileImporter(String filename) {
+	public FileImporter(String filename, String appVersion) {
 		this.filename = filename;
+		this.appVersion = appVersion;
 		loaded = false;
 	}
 	
@@ -46,27 +48,33 @@ public class FileImporter {
 						
 			parseImportFile(version, items.item(0));
 			loaded = true;
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (ParserConfigurationException ex) {
+			throw new FileImporterException(ex);
+		} catch (IOException ex) {
+			throw new FileImporterException(ex);
+		} catch (SAXException ex) {
+			throw new FileImporterException(ex);
 		}	
 	}
 		
 	private void parseImportFile(String version, Node root) throws FileImporterException {
 		ImportFileParser parser = null;
+		Version fileVersion, appVersion;
 		
-		if (version.equals("1.0")) {
-			parser = new ImportFileParser_v_1_0();
-		} else {
-			throw new FileImporterException("Unknown import file version " + version);
+		try {
+			fileVersion = Version.parse(version);
+			appVersion = Version.parse(this.appVersion);
+		} catch (NumberFormatException ex) {
+			throw new FileImporterException(ex);
 		}
 		
+		if (fileVersion.compareTo(appVersion) > 0) {
+			throw new FileImporterException("Import file version (" + 
+					fileVersion + ") is larger than the app version (" +
+					appVersion +")");
+		}
+		
+		parser = new ImportFileParser_v_1_0();		
 		parser.parse(root);
 	}
 	

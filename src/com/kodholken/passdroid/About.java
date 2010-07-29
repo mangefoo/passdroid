@@ -35,6 +35,7 @@ public class About extends Activity {
 		
 		getString(R.string.about_text);
 		((TextView) findViewById(R.id.about_content)).setText(
-				getString(R.string.about_text).replace("${VERSION}", Utils.getVersion(this)));
+				getString(R.string.about_text).replace("${VERSION}",
+						                               Utils.getVersion(this)));
 	}
 }

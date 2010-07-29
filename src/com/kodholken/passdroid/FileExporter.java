@@ -6,12 +6,14 @@ import java.io.PrintStream;
 
 public class FileExporter {
 	private String filename;
+	private String appVersion;
 	
-	public FileExporter(String filename) {
+	public FileExporter(String filename, String appVersion) {
 		this.filename = filename;
+		this.appVersion = appVersion;
 	}
 	
-	public boolean export(String version, PasswordEntry [] passwords, boolean overwrite) throws ExportException {
+	public boolean export(PasswordEntry [] passwords, boolean overwrite) throws ExportException {
 		File f = new File(filename);
 		if (f.exists()) {
 			if (!overwrite) {
@@ -25,7 +27,7 @@ public class FileExporter {
 			f.createNewFile();
 			PrintStream ps = new PrintStream(f);
 			ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			ps.println("<passdroid version=\"" + version + "\">");
+			ps.println("<passdroid version=\"" + appVersion + "\">");
 			for (PasswordEntry entry : passwords) {
 				ps.println("  <system name=\"" + entry.getDecSystem() + "\">");
 				if (entry.getDecUsername() != null) {

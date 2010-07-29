@@ -54,7 +54,7 @@ public class FileImportActivity extends Activity {
 			importDesc2.setText(desc2);
 			importDesc2.setTextColor(Color.rgb(255, 150, 150));
 		} else {
-			fileImporter = new FileImporter(importFile);
+			fileImporter = new FileImporter(importFile, Utils.getVersion(this));
 			try {
 				fileImporter.parse();
 				String desc2 = formatString(getString(R.string.import_description_file_present),

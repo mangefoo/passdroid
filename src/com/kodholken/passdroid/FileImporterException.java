@@ -6,4 +6,8 @@ public class FileImporterException extends Exception {
 	public FileImporterException(String message) {
 		super(message);
 	}
+	
+	public FileImporterException(Exception ex) {
+		super(ex);
+	}
 }
