@@ -23,6 +23,7 @@ import com.kodholken.passdroid.R;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -34,8 +35,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class Add extends Activity {
-	Button addButton;
-	TextView title;
+	private Button addButton;
+	private Button generateButton;
+	private TextView title;
+	private EditText password;
+	private Intent generateIntent;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,8 @@ public class Add extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.add);
 
-		TextView title = (TextView) this.findViewById(R.id.header);
+		password = (EditText) findViewById(R.id.password);
+		title = (TextView) findViewById(R.id.header);
 		title.setText(R.string.add_title);
 		
 		addButton = (Button) this.findViewById(R.id.add_button);
@@ -54,6 +59,8 @@ public class Add extends Activity {
 			  addPassword();
 		  }
 		});
+		
+		setupGenerateButton();
 	}
 	
 	private void addPassword() {
@@ -61,7 +68,8 @@ public class Add extends Activity {
 		EditText v;
 		
 		if (!Session.getInstance().isLoggedIn()) {
-			Utils.alertDialog(getParent(), "Failure", "Adding new entry failed due to session timeout.");
+			Utils.alertDialog(getParent(), "Failure",
+					"Adding new entry failed due to session timeout.");
 			return;
 		}
 		
@@ -96,6 +104,29 @@ public class Add extends Activity {
 		} else {
 			Session.getInstance().setNeedReload(true);
 			finish();
+		}
+	}
+
+	private void setupGenerateButton() {
+		generateButton = (Button) findViewById(R.id.generate_button);
+		generateButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				createGenerateActivity();
+			}
+		});
+	}
+	
+	private void createGenerateActivity() {
+		generateIntent = new Intent(this, GeneratePasswordActivity.class);
+		startActivityForResult(generateIntent, 0x42);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == 1) {
+			this.password.setText(GeneratePasswordActivity.getGeneratedPassword());
 		}
 	}
 }

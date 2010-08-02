@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="charsets">
+	  <item>Alphanumeric (a-z, A-Z, 0-9)</item>
+	  <item>Alphabetic (a-z, A-Z)</item>
+	  <item>Numeric (0-9)</item>
+	  <item><![CDATA[Extended (a-z, A-Z, 0-9, !#@%&/()?+-_:;*=$)]]></item>
+	</string-array>
+	
+	<string-array name="empty_array"/>
+</resources>

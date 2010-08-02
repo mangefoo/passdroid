@@ -57,25 +57,30 @@ public class ChangePassword extends Activity {
 	}
 	
 	private void handleOK() {
-		EditText oldPasswordView = (EditText) this.findViewById(R.id.old_master_password);
+		EditText oldPasswordView = (EditText) this.findViewById(
+													 R.id.old_master_password);
 
         String oldPassword = oldPasswordView.getText().toString();
         SystemData systemData = new SystemData(this);
         if (!Crypto.verifyPassword(oldPassword, systemData.getKey())) {
-        	Utils.alertDialog(this, "Invalid password", "The master password entered is incorrect.");
+        	Utils.alertDialog(this, "Invalid password",
+                              "The master password entered is incorrect.");
         	oldPasswordView.requestFocus();
         	oldPasswordView.selectAll();
         	
         	return ;
         }
 
-		EditText newPassword1View = (EditText) this.findViewById(R.id.master_password_1);
-		EditText newPassword2View = (EditText) this.findViewById(R.id.master_password_2);
+		EditText newPassword1View = (EditText) this.findViewById(
+														R.id.master_password_1);
+		EditText newPassword2View = (EditText) this.findViewById(
+														R.id.master_password_2);
 		
 		String newPassword1 = newPassword1View.getText().toString();
 		String newPassword2 = newPassword2View.getText().toString();
 		if (!newPassword1.equals(newPassword2)) {
-			Utils.alertDialog(this, "Passwords mismatch", "The new passwords you entered does not match.");
+			Utils.alertDialog(this, "Passwords mismatch",
+					          "The new passwords you entered does not match.");
 			newPassword1View.requestFocus();
 			newPassword1View.selectAll();
 			return;
@@ -96,7 +101,8 @@ public class ChangePassword extends Activity {
 		      } }); 
 		    alertDialog.show();
 		} else {
-			Utils.alertDialog(this, "Password change failed", "There was a failure when changing the password.");
+			Utils.alertDialog(this, "Password change failed",
+							 "There was a failure when changing the password.");
 		}
 	}
 }

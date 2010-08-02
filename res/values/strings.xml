@@ -97,4 +97,6 @@ Import not available. To enable it copy your exported password file to\n
 
 <string name="import_description_failure">Failed to read %f: %e.</string>
 
+<string name="generate_password_title">Generate password</string>
+
 </resources>

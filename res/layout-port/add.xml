@@ -53,13 +53,20 @@
       android:textSize="5pt"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"/>
-          
+    
     <EditText
       android:id="@+id/password"
       android:singleLine="true"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"/>
  
+    <Button
+      android:id="@+id/generate_button"
+      android:text="Generate password"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:textSize="5pt"/>
+      
   </LinearLayout>
     
   <LinearLayout

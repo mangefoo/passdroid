@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      android:versionCode="9"
+      android:versionCode="10"
       package="com.kodholken.passdroid" android:versionName="1.2">
     <supports-screens
         android:largeScreens="true"
@@ -50,7 +50,6 @@
         <activity android:label="@string/change_password_title"
                   android:theme="@android:style/Theme.Dialog"        
                   android:name=".ChangePassword">
-                  
             <intent-filter>
                 <action android:name="com.kodholken.passdroid.CHANGE_PASSWORD"/>
                 <category android:name="android.intent.category.DEFAULT"/>
@@ -76,7 +75,12 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        
+
+                  
+        <activity android:label="@string/generate_password_title"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:name=".GeneratePasswordActivity"/>
+                         
     </application>
     <uses-sdk android:minSdkVersion="3" />
 </manifest>

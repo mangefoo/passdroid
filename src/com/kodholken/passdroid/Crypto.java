@@ -30,7 +30,8 @@ public class Crypto {
 		
 		try {
 			Mac hmac = Mac.getInstance("HmacSHA256");
-			hmac.init (new SecretKeySpec ("notverysecretiv".getBytes ("UTF-8"), "RAW"));
+			hmac.init (new SecretKeySpec ("notverysecretiv".getBytes ("UTF-8"),
+					  "RAW"));
 			hmac.update(password.getBytes("UTF-8"));
 			key = hmac.doFinal();
 		} catch (Exception ex) {

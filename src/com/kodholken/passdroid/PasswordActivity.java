@@ -151,7 +151,7 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		if (Constants.DEBUG) {
 			item = menu.add(Menu.NONE, OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
 		}
-			
+		
 		return true;
 	}
 	
