@@ -33,6 +33,9 @@ public class About extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.about);
 		
+		TextView title = (TextView) findViewById(R.id.about_title);
+		title.setText("Passdroid v" + Utils.getVersion(this));
+		
 		getString(R.string.about_text);
 		((TextView) findViewById(R.id.about_content)).setText(
 				getString(R.string.about_text).replace("${VERSION}",
