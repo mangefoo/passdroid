@@ -6,7 +6,7 @@
   <TextView
     android:text="Import"
     android:id="@+id/header"
-    android:textSize="18px"
+    android:textSize="18dip"
     android:textColor="#ffffff"
     android:gravity="center_horizontal"
     android:layout_width="fill_parent"

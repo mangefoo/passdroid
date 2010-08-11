@@ -15,8 +15,6 @@ Passdroid is an open source application that lets you store your passwords in a 
 Android device. The application use AES and SHA-256 to store the passwords on the device \
 to prevent access without the master password.\n\
 \n\
-Version ${VERSION} \n
-\n\
 http://passdroid.kodholken.com/\n\
 \n\
 Copyright &#169; 2009-2010  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\

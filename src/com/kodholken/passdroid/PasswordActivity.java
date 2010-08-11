@@ -40,7 +40,6 @@ import android.widget.TextView;
 
 public class PasswordActivity extends ListActivity implements IdleLogoutCallback, PasswordModelListener {
 	private static final int OPTION_MENU_ADD      = 1;
-	private static final int OPTION_MENU_SEARCH   = 2;
 	private static final int OPTION_MENU_SETTINGS = 3;
 	private static final int OPTION_MENU_ABOUT    = 4;
 	private static final int OPTION_MENU_DROPDB   = 5;
@@ -56,6 +55,7 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	private TextView     countdownTextView;
 	private int          countdownValue;
 	private Handler      countdownHandler;
+	private TextView     titleBarCountTextView;
 	
 	public PasswordActivity() {
 		loadSettingsOnResume = false;
@@ -82,6 +82,8 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		Session.getInstance().setIdleLogoutCallback(this);
 		
 		emptyListHelp = (TextView) findViewById(com.kodholken.passdroid.R.id.empty_list_help);
+		
+		titleBarCountTextView = (TextView) findViewById(com.kodholken.passdroid.R.id.password_count);
 		
 		getListView().setTextFilterEnabled(true);
 		
@@ -163,9 +165,6 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		case OPTION_MENU_ABOUT:
 			i = new Intent(this, About.class);
 			startActivity(i);
-			break;
-		case OPTION_MENU_SEARCH:
-			findViewById(R.id.search).setVisibility(View.VISIBLE);
 			break;
 		case OPTION_MENU_SETTINGS:
 			startActivity(new Intent(this, Settings.class));
@@ -263,6 +262,8 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		setListAdapter(new PasswordAdapter(this, entries,
 				PreferenceManager.getDefaultSharedPreferences(this).getBoolean("display_username", true))); 
 		
+		updateTitlebar();
+		
 		if (entries.length == 0) {
 			emptyListHelp.setVisibility(View.VISIBLE);
 			list.setVisibility(View.GONE);
@@ -272,6 +273,13 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		}
 	}
 	
+	private void updateTitlebar() {		
+		int count = PasswordModel.getInstance(this).getPasswords().length;
+		String quantifier = count == 1 ? "" : "s";
+		
+		titleBarCountTextView.setText(count + " password" + quantifier);
+	}
+
 	private void loadSettings() {
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		Session.getInstance().setIdleLogout(pref.getBoolean("idle_logout", true));
