@@ -23,6 +23,7 @@ import com.kodholken.passdroid.R;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -30,12 +31,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Edit extends Activity {
 	private Button saveButton;
 	private Button cancelButton;
+	private Button generateButton;
+	private EditText password;
 	
+	private Intent generateIntent;
 	private long passwordId;
 
 	@Override
@@ -53,7 +58,9 @@ public class Edit extends Activity {
 		
 		((TextView) findViewById(R.id.system)).setText(extras.getString("system"));
 		((TextView) findViewById(R.id.username)).setText(extras.getString("username"));
-		((TextView) findViewById(R.id.password)).setText(extras.getString("password"));		
+		
+		password = (EditText) findViewById(R.id.password);
+		password.setText(extras.getString("password"));
 
 		saveButton = (Button) this.findViewById(R.id.save_button);
 		saveButton.setOnClickListener(new OnClickListener() {
@@ -72,6 +79,8 @@ public class Edit extends Activity {
 				finish();
 			}
 		});
+		
+		setupGenerateButton();
 	}
 	
 	private void updatePassword() {
@@ -102,5 +111,28 @@ public class Edit extends Activity {
 		db.close();
 		
 		finish();
+	}
+	
+	private void setupGenerateButton() {
+		generateButton = (Button) findViewById(R.id.generate_button);
+		generateButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				createGenerateActivity();
+			}
+		});
+	}
+	
+	private void createGenerateActivity() {
+		generateIntent = new Intent(this, GeneratePasswordActivity.class);
+		startActivityForResult(generateIntent, 0x42);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == 1) {
+			this.password.setText(GeneratePasswordActivity.getGeneratedPassword());
+		}
 	}
 }

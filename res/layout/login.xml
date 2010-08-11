@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:maxLines="1"
     android:password="true"
-    android:layout_marginBottom="5pt"/>
+    android:layout_marginBottom="13dip"/>
 
   <Button
     android:id="@+id/login_button"
