@@ -34,55 +34,72 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Add extends Activity {
-	private Button addButton;
+public class EditActivity extends Activity {
+	private Button saveButton;
+	private Button cancelButton;
 	private Button generateButton;
-	private TextView title;
 	private EditText password;
-	private Intent generateIntent;
 	
+	private Intent generateIntent;
+	private long passwordId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.add);
+		setContentView(R.layout.edit);
+		
+		TextView title = (TextView) this.findViewById(R.id.header);
+		title.setText(R.string.edit_title);
+		
+		Bundle extras = getIntent().getExtras();
 
+		passwordId = extras.getLong("id");
+		
+		((TextView) findViewById(R.id.system)).setText(extras.getString("system"));
+		((TextView) findViewById(R.id.username)).setText(extras.getString("username"));
+		
 		password = (EditText) findViewById(R.id.password);
-		title = (TextView) findViewById(R.id.header);
-		title.setText(R.string.add_title);
-		
-		addButton = (Button) this.findViewById(R.id.add_button);
-		
-		addButton.setOnClickListener(new OnClickListener() {
+		password.setText(extras.getString("password"));
+
+		saveButton = (Button) this.findViewById(R.id.save_button);
+		saveButton.setOnClickListener(new OnClickListener() {
 		  @Override
 		  public void onClick(View v) {
-			  addPassword();
+			  updatePassword();
+			  Session.getInstance().setNeedReload(true);
+			  Utils.debug("Save Clicked");
 		  }
+		});
+		
+		cancelButton = (Button) this.findViewById(R.id.cancel_button);
+		cancelButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
 		});
 		
 		setupGenerateButton();
 	}
 	
-	private void addPassword() {
-		long id = -1;
-		EditText v;
-		
-		if (!Session.getInstance().isLoggedIn()) {
-			Utils.alertDialog(getParent(), "Failure",
-					"Adding new entry failed due to session timeout.");
-			return;
-		}
+	@Override
+	protected void onPause() {
+		Utils.debug("EditActivity: onPause()");
+		super.onPause();
+	}
+	
+	private void updatePassword() {
+		String system   = ((TextView) findViewById(R.id.system)).getText().toString();
+		String username = ((TextView) findViewById(R.id.username)).getText().toString();
+		String password = ((TextView) findViewById(R.id.password)).getText().toString();
 		
 		ContentValues values = new ContentValues();
-		PasswordEntry entry = new PasswordEntry();
 		
-		v = (EditText) this.findViewById(R.id.system);
-		entry.setDecSystem(v.getText().toString());
-		v = (EditText) this.findViewById(R.id.username);
-		entry.setDecUsername(v.getText().toString());
-		v = (EditText) this.findViewById(R.id.password);
-		entry.setDecPassword(v.getText().toString());
-
+		PasswordEntry entry = new PasswordEntry();
+		entry.setDecSystem(system);
+		entry.setDecUsername(username);
+		entry.setDecPassword(password);
 		entry.encryptAll(Session.getInstance().getKey());
 		
 		values.put("system",   entry.getEncSystem());	
@@ -93,20 +110,15 @@ public class Add extends Activity {
 		SQLiteDatabase db = passwordData.getWritableDatabase();
 		
 		try {
-			id = db.insertOrThrow("data", null, values);
+			db.update("data", values, "id=" + passwordId, null);
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 		}
 		db.close();
 		
-		if (id == -1) {
-			Utils.alertDialog(this, "Failure", "Adding new entry failed.");
-		} else {
-			Session.getInstance().setNeedReload(true);
-			finish();
-		}
+		finish();
 	}
-
+	
 	private void setupGenerateButton() {
 		generateButton = (Button) findViewById(R.id.generate_button);
 		generateButton.setOnClickListener(new OnClickListener() {

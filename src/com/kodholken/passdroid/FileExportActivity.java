@@ -66,6 +66,13 @@ public class FileExportActivity extends Activity {
 		});
 	}
 	
+	
+	@Override
+	protected void onPause() {
+		Utils.debug("FileExportActivity: onPause()");
+		super.onPause();
+	}
+	
 	private void doExport() {
 		FileExporter exporter = new FileExporter(
 										exportFilename.getText().toString(),

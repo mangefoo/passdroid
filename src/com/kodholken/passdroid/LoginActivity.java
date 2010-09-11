@@ -29,7 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class Login extends Activity {
+public class LoginActivity extends Activity {
 	private Button loginButton;
 	private boolean hasBackKeyDown;
 	
@@ -51,6 +51,12 @@ public class Login extends Activity {
 			  handleLogin();
 		  }
 		});
+	}
+	
+	@Override
+	protected void onPause() {
+		Utils.debug("LoginActivity: onPause()");
+		super.onPause();
 	}
 	
 	@Override

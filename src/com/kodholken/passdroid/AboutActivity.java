@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
-public class About extends Activity {
+public class AboutActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,5 +40,11 @@ public class About extends Activity {
 		((TextView) findViewById(R.id.about_content)).setText(
 				getString(R.string.about_text).replace("${VERSION}",
 						                               Utils.getVersion(this)));
+	}
+	
+	@Override
+	protected void onPause() {
+		Utils.debug("AboutdActivity: onPause()");
+		super.onPause();
 	}
 }

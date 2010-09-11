@@ -9,7 +9,7 @@
         android:anyDensity="true"/>
         
     <application android:icon="@drawable/safe_icon_48x48" android:label="@string/app_name">
-        <activity android:label="@string/app_name" android:name="Main"
+        <activity android:label="@string/app_name" android:name="MainActivity"
         		  android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,24 +22,24 @@
                   android:theme="@android:style/Theme.Black.NoTitleBar"/>
         
         <activity android:label="@string/about_title"
-                  android:name=".About"
+                  android:name=".AboutActivity"
                   android:icon="@drawable/safe_icon_48x48"
                   android:theme="@android:style/Theme.Dialog"/>
         
         <activity android:label="@string/add_title"
-                  android:name=".Add"
+                  android:name=".AddActivity"
                   android:theme="@android:style/Theme.Dialog"/>
 
         <activity android:label="@string/edit_title"
-                  android:name=".Edit"
+                  android:name=".EditActivity"
                   android:theme="@android:style/Theme.Dialog"/>
         
         <activity android:label="@string/login_title"
-                  android:name=".Login"
+                  android:name=".LoginActivity"
                   android:theme="@android:style/Theme.Black.NoTitleBar"/>
 
         <activity android:label="@string/show_title"
-                  android:name=".ShowPassword"
+                  android:name=".ShowActivity"
                   android:theme="@android:style/Theme.Dialog"/>
 
         <activity android:label="@string/initialize_title"
@@ -50,7 +50,7 @@
                   
         <activity android:label="@string/change_password_title"
                   android:theme="@android:style/Theme.Dialog"        
-                  android:name=".ChangePassword">
+                  android:name=".ChangePasswordActivity">
             <intent-filter>
                 <action android:name="com.kodholken.passdroid.CHANGE_PASSWORD"/>
                 <category android:name="android.intent.category.DEFAULT"/>

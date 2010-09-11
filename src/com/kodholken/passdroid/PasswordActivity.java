@@ -109,6 +109,12 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	}
 	
 	@Override
+	protected void onPause() {
+		Utils.debug("PasswordActivity: onPause()");
+		super.onPause();
+	}
+	
+	@Override
 	public void onResume() {
 		Utils.debug("Passwords:onResume()");
 		super.onResume();
@@ -163,7 +169,7 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 
 		switch (item.getItemId()) {
 		case OPTION_MENU_ABOUT:
-			i = new Intent(this, About.class);
+			i = new Intent(this, AboutActivity.class);
 			startActivity(i);
 			break;
 		case OPTION_MENU_SETTINGS:
@@ -175,7 +181,7 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 			Session.getInstance().setIdleLogout(false);
 			Session.getInstance().cancelLogoutTimer();
 			loadSettingsOnResume = true;
-			startActivity(new Intent(this, Add.class));
+			startActivity(new Intent(this, AddActivity.class));
 			listPosition = list.getFirstVisiblePosition();
 			break;
 		case OPTION_MENU_DROPDB:
@@ -198,7 +204,7 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 
 		PasswordModel model = PasswordModel.getInstance(this);
 		
-		Intent i = new Intent(this, ShowPassword.class);
+		Intent i = new Intent(this, ShowActivity.class);
 		i.putExtra("id",       model.getAt(position).getId());
 		i.putExtra("system",   model.getAt(position).getDecSystem());
 		i.putExtra("username", model.getAt(position).getDecUsername());

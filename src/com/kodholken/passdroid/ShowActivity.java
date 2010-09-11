@@ -35,7 +35,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-public class ShowPassword extends Activity {
+public class ShowActivity extends Activity {
 	public static final int OPTION_MENU_EDIT     = 0;
 	public static final int OPTION_MENU_DELETE   = 1;
 	public static final int OPTION_MENU_SETTINGS = 2;
@@ -95,8 +95,14 @@ public class ShowPassword extends Activity {
 		});
 	}
 	
+	@Override
+	protected void onPause() {
+		Utils.debug("ShowActivity: onPause()");
+		super.onPause();
+	}
+	
 	private void editPassword() {
-		Intent i = new Intent(this, Edit.class);
+		Intent i = new Intent(this, EditActivity.class);
 		i.putExtra("id", passwordId);
 		i.putExtra("system", system);
 		i.putExtra("username", username);

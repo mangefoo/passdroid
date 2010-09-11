@@ -30,7 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class ChangePassword extends Activity {
+public class ChangePasswordActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,6 +54,12 @@ public class ChangePassword extends Activity {
 				finish();
 			}
 		});
+	}
+	
+	@Override
+	protected void onPause() {
+		Utils.debug("ChangePasswordActivity: onPause()");
+		super.onPause();
 	}
 	
 	private void handleOK() {

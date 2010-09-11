@@ -25,7 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 
-public class Main extends Activity {
+public class MainActivity extends Activity {
 	Button passwordButton;
 	Button clearDbButton;
 	
@@ -40,6 +40,13 @@ public class Main extends Activity {
     	}
 	}
     
+	@Override
+	protected void onPause() {
+		Utils.debug("MainActivity: onPause()");
+		super.onPause();
+	}
+	
+    @Override
     public void onResume() {
     	super.onResume();
     	
@@ -86,7 +93,7 @@ public class Main extends Activity {
     }
     
     public void startLogin() {
-    	Intent i = new Intent(this, Login.class);
+    	Intent i = new Intent(this, LoginActivity.class);
     	startActivity(i);
     }
     

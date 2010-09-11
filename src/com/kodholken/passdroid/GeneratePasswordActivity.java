@@ -71,6 +71,13 @@ public class GeneratePasswordActivity extends Activity {
 		setupGenerateButton();
 	}
 	
+	
+	@Override
+	protected void onPause() {
+		Utils.debug("GeneratePasswordActivity: onPause()");
+		super.onPause();
+	}
+	
 	private void setupIncButton() {
 		incButton = (ImageButton) findViewById(R.id.increment);
 		
