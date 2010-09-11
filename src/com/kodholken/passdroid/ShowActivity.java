@@ -95,12 +95,6 @@ public class ShowActivity extends Activity {
 		});
 	}
 	
-	@Override
-	protected void onPause() {
-		Utils.debug("ShowActivity: onPause()");
-		super.onPause();
-	}
-	
 	private void editPassword() {
 		Intent i = new Intent(this, EditActivity.class);
 		i.putExtra("id", passwordId);

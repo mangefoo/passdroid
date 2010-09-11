@@ -38,7 +38,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class PasswordActivity extends ListActivity implements IdleLogoutCallback, PasswordModelListener {
+/**
+ * Activity that displays the user passwords.
+ */
+public class PasswordActivity extends ListActivity
+                              implements IdleLogoutCallback,
+                                         PasswordModelListener {
 	private static final int OPTION_MENU_ADD      = 1;
 	private static final int OPTION_MENU_SETTINGS = 3;
 	private static final int OPTION_MENU_ABOUT    = 4;
@@ -46,6 +51,8 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	private static final int OPTION_MENU_LOGOUT   = 6;
 	
 	private boolean hasBackKeyDown;
+	// Used to keep the activity from reloading the settings on resumes where
+	// the settings has not changed.
 	private boolean loadSettingsOnResume;
 	private ListView list;
 	private int listPosition;
@@ -77,13 +84,17 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 				
 		list = (ListView) findViewById(android.R.id.list);
 		
-		loadSettingsOnResume = true; // Make sure settings are loaded on first run
+		// Make sure settings are loaded on first run.
+		loadSettingsOnResume = true;
+		// Make sure the password entries is loaded from the database
 		Session.getInstance().setNeedReload(true);
 		Session.getInstance().setIdleLogoutCallback(this);
 		
-		emptyListHelp = (TextView) findViewById(com.kodholken.passdroid.R.id.empty_list_help);
+		emptyListHelp = (TextView) findViewById(
+				                 com.kodholken.passdroid.R.id.empty_list_help);
 		
-		titleBarCountTextView = (TextView) findViewById(com.kodholken.passdroid.R.id.password_count);
+		titleBarCountTextView = (TextView) findViewById
+		                         (com.kodholken.passdroid.R.id.password_count);
 		
 		getListView().setTextFilterEnabled(true);
 		
@@ -100,7 +111,8 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		
 		countdownLayout.addView(countdownTextView);
 		
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
+				                               LayoutParams.WRAP_CONTENT);
 		getWindow().addContentView(countdownLayout, params);
 		
 		countdownHandler = new Handler();
@@ -109,15 +121,9 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	}
 	
 	@Override
-	protected void onPause() {
-		Utils.debug("PasswordActivity: onPause()");
-		super.onPause();
-	}
-	
-	@Override
 	public void onResume() {
-		Utils.debug("Passwords:onResume()");
 		super.onResume();
+		
 		if (!Session.getInstance().isLoggedIn()) {
 			finish();
 			return ;
@@ -144,20 +150,24 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 
-		MenuItem item = menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE, getString(R.string.options_add));
+		MenuItem item = menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE,
+				                 getString(R.string.options_add));
 		item.setIcon(android.R.drawable.ic_menu_add);
 		
-		item = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE, getString(R.string.options_settings));
+		item = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE,
+				        getString(R.string.options_settings));
 		item.setIcon(android.R.drawable.ic_menu_preferences);
 		
-		item = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE, getString(R.string.options_about));
+		item = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE,
+				        getString(R.string.options_about));
 		item.setIcon(android.R.drawable.ic_menu_info_details);
 		
-		item = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE, getString(R.string.options_logout));
+		item = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE,
+				        getString(R.string.options_logout));
 		item.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 
 		if (Constants.DEBUG) {
-			item = menu.add(Menu.NONE, OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
+			item = menu.add(Menu.NONE,OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
 		}
 		
 		return true;
@@ -248,25 +258,28 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 		alertDialog.setTitle("Confirm logout");
 		alertDialog.setMessage("Do you really want to log out?");
 		
-		alertDialog.setButton(AlertDialog.BUTTON1, "Yes", new DialogInterface.OnClickListener() { 
+		alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
+				             new DialogInterface.OnClickListener() { 
 			public void onClick(DialogInterface dialog, int which) {
 				Session.getInstance().logout();
 				finish();
 			}
 		});
 		
-		alertDialog.setButton(AlertDialog.BUTTON2, "No", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
-			}
+		alertDialog.setButton(AlertDialog.BUTTON2, "No",
+				              new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {}
 		});
 		
 		alertDialog.show();
 	}
 		
 	private void loadPasswords() {
-		PasswordEntry [] entries = PasswordModel.getInstance(this).getPasswords();
+		PasswordEntry [] entries =
+			                    PasswordModel.getInstance(this).getPasswords();
 		setListAdapter(new PasswordAdapter(this, entries,
-				PreferenceManager.getDefaultSharedPreferences(this).getBoolean("display_username", true))); 
+				PreferenceManager.getDefaultSharedPreferences(this).
+				                  getBoolean("display_username", true))); 
 		
 		updateTitlebar();
 		
@@ -287,9 +300,12 @@ public class PasswordActivity extends ListActivity implements IdleLogoutCallback
 	}
 
 	private void loadSettings() {
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-		Session.getInstance().setIdleLogout(pref.getBoolean("idle_logout", true));
-		Session.getInstance().setIdleLogoutTime(Integer.parseInt(pref.getString("idle_logout_time", "60")));
+		SharedPreferences pref = PreferenceManager.
+		                                     getDefaultSharedPreferences(this);
+		Session.getInstance().setIdleLogout(pref.getBoolean("idle_logout",
+				                                            true));
+		Session.getInstance().setIdleLogoutTime(
+				   Integer.parseInt(pref.getString("idle_logout_time", "60")));
 		Session.getInstance().bumpLogoutTimer();
 	}
 

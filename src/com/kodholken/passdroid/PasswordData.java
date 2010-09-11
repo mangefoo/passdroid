@@ -31,7 +31,8 @@ public class PasswordData extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, system TEXT NOT NULL, username TEXT, password TEXT)");
+		db.execSQL("CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+				   "system TEXT NOT NULL, username TEXT, password TEXT)");
 	}
 
 	@Override

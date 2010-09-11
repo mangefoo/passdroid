@@ -29,7 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class Initialize extends Activity {
+public class InitializeActivity extends Activity {
 	Button okButton;
 	
 	@Override
@@ -58,7 +58,7 @@ public class Initialize extends Activity {
 			initialize(p1);
 			Session.getInstance().setKey(Crypto.hmacFromPassword(p1));
 			Session.getInstance().setLoggedIn();
-			Utils.startPasswordsView(this);
+			Utils.startPasswordActivity(this);
 			finish();
 		} else {
 			Utils.alertDialog(this, getString(R.string.initialize_mismatch_title), getString(R.string.initialize_mismatch_text));

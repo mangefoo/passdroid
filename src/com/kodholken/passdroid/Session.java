@@ -22,19 +22,30 @@ package com.kodholken.passdroid;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Singleton class for keeping application state accessible to all classes of
+ * the application.
+ */
 public class Session {
-	private byte [] key;
-    private boolean isLoggedIn;
-	private Timer   logoutTimer;
+	private byte [] key;         // Key derived from the master password. It is
+	                             // used for all encryption and decryption of 
+	                             // the user stored data.
+    private boolean isLoggedIn;  // Indicates whether the user is currently
+                                 // logged in.
+	
+    private Timer   logoutTimer;
 	private boolean idleLogout;
 	private int     idleLogoutTime;
 	private IdleLogoutCallback idleLogoutCallback;
 	private int countdown;
+	
 	private boolean needReload;
-	private boolean exitMain;
+	
+	private boolean exitMain;  // Indicates whether the MainActivity should 
+	                           // exit when it receives control (onResume)
 
-	private static Session session;
-
+	private static Session session;  // Singleton instance of this class
+	
 	private Session() {
 		needReload = false;
 		isLoggedIn = false;

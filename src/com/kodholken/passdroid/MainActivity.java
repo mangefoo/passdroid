@@ -21,35 +21,27 @@ package com.kodholken.passdroid;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.Button;
 
-public class MainActivity extends Activity {
-	Button passwordButton;
-	Button clearDbButton;
-	
+/**
+ * Main activity of the application. This is started upon application startup
+ * and will determine which parts to launch depending on the stored application
+ * state.
+ */
+public class MainActivity extends Activity {	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
-    	
-    	if (Constants.CLEARDB) {
-    		clearDatabase();
-    		finish();
-    	}
 	}
     
-	@Override
-	protected void onPause() {
-		Utils.debug("MainActivity: onPause()");
-		super.onPause();
-	}
-	
     @Override
     public void onResume() {
     	super.onResume();
     	
+    	// Other activities use SessiongetInstance().setExitMain() to indicate
+    	// whether we should exit the the application or spawn a new activity
+    	// when control returns to this activity.
     	if (Session.getInstance().getExitMain()) {
     		Session.getInstance().setExitMain(false);
     		finish();
@@ -59,11 +51,19 @@ public class MainActivity extends Activity {
     	startup();
     }
     
+    /*
+     * This method launch different activities depending on the application
+     * state. If the user is flagged as logged in we proceed to the password
+     * list activity. If we detect that the application has been updated to a
+     * newer version we perform migration steps. if we detect that this is the
+     * first time the application is run we prompt the user for a master
+     * password.
+     */
     private void startup() {
     	String appVersion = Utils.getVersion(this);
 
     	if (Session.getInstance().isLoggedIn()) {
-    		Utils.startPasswordsView(this);
+    		Utils.startPasswordActivity(this);
     		return;
     	}
 
@@ -75,41 +75,22 @@ public class MainActivity extends Activity {
     	} else {
         	String dbVersion = system.getVersion();
 
+        	// Check for application update. If we detect an update we call
+        	// the pre-login migration function. The post-login function is 
+        	// called when the user has logged in.
+        	// @see LoginActivity#handleVersionChange
         	if (!dbVersion.equals(appVersion)) {
         		DBMigration.preLoginMigration(this, dbVersion, appVersion);
         	}
     	}
- 
+
+    	// First time logins is detected by the absence of a master password
     	if (system.hasKey()) {
-    		startLogin();
+        	Intent i = new Intent(this, LoginActivity.class);
+        	startActivity(i);
     	} else {
-    		startInitialize();
+        	Intent i = new Intent(this, InitializeActivity.class);
+        	startActivity(i);
     	}
-    }
-    
-    public void startPassword() {
-		  Intent i = new Intent(this, PasswordActivity.class);
-		  startActivity(i);
-    }
-    
-    public void startLogin() {
-    	Intent i = new Intent(this, LoginActivity.class);
-    	startActivity(i);
-    }
-    
-    public void startInitialize() {
-    	Intent i = new Intent(this, Initialize.class);
-    	startActivity(i);
-    }
-    
-    public void clearDatabase() {
-    	PasswordData passwordData = new PasswordData(this);
-		SQLiteDatabase db = passwordData.getReadableDatabase();
-		passwordData.onUpgrade(db, 1, 1);
-		db.close();
-		SystemData systemData = new SystemData(this);
-		db = systemData.getReadableDatabase();
-		systemData.onUpgrade(db, 1, 1);
-		db.close();
     }
 }

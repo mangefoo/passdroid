@@ -56,12 +56,6 @@ public class ChangePasswordActivity extends Activity {
 		});
 	}
 	
-	@Override
-	protected void onPause() {
-		Utils.debug("ChangePasswordActivity: onPause()");
-		super.onPause();
-	}
-	
 	private void handleOK() {
 		EditText oldPasswordView = (EditText) this.findViewById(
 													 R.id.old_master_password);

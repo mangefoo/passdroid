@@ -43,7 +43,7 @@ public class Utils {
 	    alertDialog.show();
 	}
 	
-	public static void startPasswordsView(Context context) {
+	public static void startPasswordActivity(Context context) {
 		Intent i = new Intent(context, PasswordActivity.class);
 		context.startActivity(i);
 	}

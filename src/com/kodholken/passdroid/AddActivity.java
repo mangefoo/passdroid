@@ -34,6 +34,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+/**
+ * Activity for adding new passwords.
+ */
 public class AddActivity extends Activity {
 	private Button addButton;
 	private Button generateButton;
@@ -61,12 +64,6 @@ public class AddActivity extends Activity {
 		});
 		
 		setupGenerateButton();
-	}
-	
-	@Override
-	protected void onPause() {
-		Utils.debug("AddActivity: onPause()");
-		super.onPause();
 	}
 	
 	private void addPassword() {

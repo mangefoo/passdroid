@@ -29,6 +29,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * Activity that displays the login screen and verifies the master password.
+ */
 public class LoginActivity extends Activity {
 	private Button loginButton;
 	private boolean hasBackKeyDown;
@@ -37,6 +40,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// If we are already logged in we are done. This will return control
+		// to the MainActivity which is responsible for creating and launching
+		// a PasswordActivity instance.
 		if (Session.getInstance().isLoggedIn()) {
 			finish();
 		}
@@ -54,12 +60,6 @@ public class LoginActivity extends Activity {
 	}
 	
 	@Override
-	protected void onPause() {
-		Utils.debug("LoginActivity: onPause()");
-		super.onPause();
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
 		if (Session.getInstance().isLoggedIn()) {
@@ -69,10 +69,18 @@ public class LoginActivity extends Activity {
 		((EditText) this.findViewById(R.id.login_password)).setText("");
 	}
 	
+	/**
+	 * Handles events when the user release the back button. This is used in
+	 * conjunction with onKeyDown() to make sure that we only react to back
+	 * events initialized in this view. 
+	 */
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (hasBackKeyDown) {
+				// A back key on the login menu should exit the application
+				// so we need to indicate to MainActivity that it should exit
+				// in onResume()
 				Session.getInstance().setExitMain(true);
 				hasBackKeyDown = false;
 				finish();
@@ -93,6 +101,12 @@ public class LoginActivity extends Activity {
 		return false;
 	}
 	
+	/**
+	 * Handler for when the user press the login button after entering the
+	 * master password. If the correct password is entered we flat the user as
+	 * logged in and return control to the MainActivity which will launch the
+	 * 
+	 */
 	private void handleLogin() {
 		EditText t = (EditText) this.findViewById(R.id.login_password);
 		if (t != null) {
@@ -102,14 +116,19 @@ public class LoginActivity extends Activity {
 				Session.getInstance().setLoggedIn();
 				
 				handleVersionChange();
-				Utils.startPasswordsView(this);
+				Utils.startPasswordActivity(this);
 			} else {
-				Utils.alertDialog(this, "Login Failure", "The supplied password was incorrect.");
+				Utils.alertDialog(this, "Login Failure",
+						                "The supplied password was incorrect.");
 				((EditText) findViewById(R.id.login_password)).selectAll();
 			}
 		}	
 	}
 	
+	/**
+	 * Handle the post-login version change processing. This is where the app
+	 * version will be updated in the database.
+	 */
 	private void handleVersionChange() {
     	SystemData system = new SystemData(this);
 		String dbVersion = system.getVersion();
@@ -122,7 +141,7 @@ public class LoginActivity extends Activity {
     		}
     	}
 	}
-		
+
 	private boolean verifyPassword(String password) {
 		SystemData systemData = new SystemData(this);
 		return Crypto.verifyPassword(password, systemData.getKey());

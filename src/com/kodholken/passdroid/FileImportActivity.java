@@ -91,12 +91,6 @@ public class FileImportActivity extends Activity {
 		}
 	}
 	
-	@Override
-	protected void onPause() {
-		Utils.debug("FileImportActivity: onPause()");
-		super.onPause();
-	}
-	
 	private void doImport() {
 		PasswordModel model = PasswordModel.getInstance(this);
 		if (model.setPasswords(fileImporter.getPasswordEntries())) {

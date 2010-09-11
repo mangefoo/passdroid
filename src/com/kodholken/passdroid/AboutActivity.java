@@ -21,12 +21,11 @@ package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends PassdroidActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,11 +39,5 @@ public class AboutActivity extends Activity {
 		((TextView) findViewById(R.id.about_content)).setText(
 				getString(R.string.about_text).replace("${VERSION}",
 						                               Utils.getVersion(this)));
-	}
-	
-	@Override
-	protected void onPause() {
-		Utils.debug("AboutdActivity: onPause()");
-		super.onPause();
 	}
 }

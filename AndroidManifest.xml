@@ -43,7 +43,7 @@
                   android:theme="@android:style/Theme.Dialog"/>
 
         <activity android:label="@string/initialize_title"
-                  android:name=".Initialize"/>
+                  android:name=".InitializeActivity"/>
                   
         <activity android:label="@string/settings_title"
                   android:name=".Settings"/>

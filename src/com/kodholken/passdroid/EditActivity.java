@@ -82,13 +82,7 @@ public class EditActivity extends Activity {
 		
 		setupGenerateButton();
 	}
-	
-	@Override
-	protected void onPause() {
-		Utils.debug("EditActivity: onPause()");
-		super.onPause();
-	}
-	
+
 	private void updatePassword() {
 		String system   = ((TextView) findViewById(R.id.system)).getText().toString();
 		String username = ((TextView) findViewById(R.id.username)).getText().toString();
