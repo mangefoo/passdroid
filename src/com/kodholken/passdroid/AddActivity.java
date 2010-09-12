@@ -80,7 +80,14 @@ public class AddActivity extends Activity {
 		PasswordEntry entry = new PasswordEntry();
 		
 		v = (EditText) this.findViewById(R.id.system);
-		entry.setDecSystem(v.getText().toString());
+		// We require that the user has entered a valid system name
+		if (v.getText().toString().matches("^\\s*$")) {
+			Utils.alertDialog(this, "Empty system name",
+					 "Please enter a system name before adding the password.");
+			return ;
+		}
+		
+		entry.setDecSystem(v.getText().toString());		
 		v = (EditText) this.findViewById(R.id.username);
 		entry.setDecUsername(v.getText().toString());
 		v = (EditText) this.findViewById(R.id.password);
@@ -126,10 +133,11 @@ public class AddActivity extends Activity {
 	}
 	
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		//super.onActivityResult(requestCode, resultCode, data);
+	protected void onActivityResult(int requestCode, int resultCode,
+			                        Intent data) {
 		if (resultCode == 1) {
-			this.password.setText(GeneratePasswordActivity.getGeneratedPassword());
+			this.password.setText(GeneratePasswordActivity.
+					              getGeneratedPassword());
 		}
 	}
 }
