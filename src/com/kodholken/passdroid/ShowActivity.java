@@ -28,13 +28,17 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.ClipboardManager;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-
+/**
+ * Activity that displays a password entry and let the user choose to edit or
+ * delete the entry.
+ */
 public class ShowActivity extends Activity {
 	public static final int OPTION_MENU_EDIT     = 0;
 	public static final int OPTION_MENU_DELETE   = 1;
@@ -67,7 +71,10 @@ public class ShowActivity extends Activity {
 
 		((TextView) findViewById(R.id.system)).setText(system);
 		TextView usernameView = (TextView) findViewById(R.id.username);
-		TextView usernameHeaderView = (TextView) findViewById(R.id.username_header);
+		TextView usernameHeaderView = (TextView) findViewById(
+				                                         R.id.username_header);
+		
+		// Do not show the username entry if it does not exist
 		if (username.length() > 0) {
 			usernameView.setText(username);
 		} else {
@@ -93,6 +100,42 @@ public class ShowActivity extends Activity {
 				confirmDelete();
 			}
 		});
+		
+		setupClipboardAction();
+	}
+	
+	/**
+	 * Set up a clickable password. When clicked the user will be prompted to
+	 * choose if the password should be copied to the clipboard.
+	 */
+	private void setupClipboardAction() {
+		final TextView passwordView = (TextView) findViewById(R.id.password);
+		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setTitle("Copy to clipboard");
+		alertDialog.setMessage("Copy the password to clipboard?");
+		
+		alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
+				             new DialogInterface.OnClickListener() { 
+			public void onClick(DialogInterface dialog, int which) {
+				ClipboardManager clipboard = 
+					    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+				clipboard.setText(passwordView.getText());
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON2, "No",
+				              new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {}
+		});
+		
+		passwordView.setOnClickListener(
+			new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					alertDialog.show();
+				}
+			}
+		);
 	}
 	
 	private void editPassword() {
@@ -109,16 +152,18 @@ public class ShowActivity extends Activity {
 	private void confirmDelete() {
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 		alertDialog.setTitle("Confirm delete");
-		alertDialog.setMessage("Are your sure you want to delete " + system + "?");
+		alertDialog.setMessage("Are your sure you want to delete "+system+"?");
 		
-		alertDialog.setButton(AlertDialog.BUTTON1, "Yes", new DialogInterface.OnClickListener() { 
+		alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
+				              new DialogInterface.OnClickListener() { 
 			public void onClick(DialogInterface dialog, int which) {
 				deletePassword();
 				Session.getInstance().setNeedReload(true);
 			}
 		});
 		
-		alertDialog.setButton(AlertDialog.BUTTON2, "No", new DialogInterface.OnClickListener() {
+		alertDialog.setButton(AlertDialog.BUTTON2, "No", 
+				              new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 			}
 		});
