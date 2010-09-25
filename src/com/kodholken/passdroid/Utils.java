@@ -30,7 +30,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 
 public class Utils {
-	public static void alertDialog(Context context, String title, String message) {
+	public static void alertDialog(Context context, String title, 
+			                       String message) {
 		AlertDialog alertDialog;
 		
 	    alertDialog = new AlertDialog.Builder(context).create();

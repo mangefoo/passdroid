@@ -201,7 +201,8 @@ public class PasswordListActivity extends TimeoutListActivity
 			db.close();
 			break;
 		case OPTION_MENU_GENERATE:
-			Intent generateIntent = new Intent(this, GeneratePasswordActivity.class);
+			Intent generateIntent = new Intent(this,
+					                           GeneratePasswordActivity.class);
 			generateIntent.putExtra("displayPassword", 1);
 			startActivity(generateIntent);
 			break;
