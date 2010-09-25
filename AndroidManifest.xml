@@ -46,7 +46,7 @@
                   android:name=".InitializeActivity"/>
                   
         <activity android:label="@string/settings_title"
-                  android:name=".Settings"/>
+                  android:name=".SettingsActivity"/>
                   
         <activity android:label="@string/change_password_title"
                   android:theme="@android:style/Theme.Dialog"        

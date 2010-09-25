@@ -26,7 +26,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-public class Settings extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,12 +37,27 @@ public class Settings extends PreferenceActivity implements OnSharedPreferenceCh
 	}
 	
 	@Override
+	protected void onResume() {
+		TimeoutHandler.gotResume();
+		super.onResume();
+
+		if (TimeoutHandler.hasTimedOut(this)) {
+			Session.getInstance().setLoggedIn(false);
+			finish();
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		TimeoutHandler.gotPause();
+		super.onPause();
+	}
+	
+	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		updateSummaries();
 		Session.getInstance().setNeedReload(true);
 	}
 	
-	public void updateSummaries() {
-		getPreferenceScreen().findPreference("idle_logout_time").setSummary(getPreferenceScreen().getSharedPreferences().getString("idle_logout_time",""));
-	}
+	public void updateSummaries() {}
 }
