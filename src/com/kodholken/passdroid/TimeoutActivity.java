@@ -5,11 +5,10 @@ import android.app.Activity;
 public class TimeoutActivity extends Activity {
 	@Override
 	protected void onResume() {
-		Utils.debug("TimeoutActivity::onResume()");
 		TimeoutHandler.gotResume();
 		super.onResume();
-
-		if (TimeoutHandler.hasTimedOut()) {
+		
+		if (TimeoutHandler.hasTimedOut(this)) {
 			Session.getInstance().setLoggedIn(false);
 			finish();
 		}
@@ -17,7 +16,6 @@ public class TimeoutActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		Utils.debug("TimeoutActivity::onPause()");
 		TimeoutHandler.gotPause();
 		super.onPause();
 	}

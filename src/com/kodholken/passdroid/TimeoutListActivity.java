@@ -4,20 +4,19 @@ import android.app.ListActivity;
 
 public class TimeoutListActivity extends ListActivity {
 	@Override
-	protected void onPause() {
-		Utils.debug("TimeoutListActivity::onPause()");
-		super.onPause();
-		TimeoutHandler.gotPause();
-	}
-	
-	@Override
 	protected void onResume() {
-		Utils.debug("TimeoutListActivity::onResume()");
-		super.onResume();
 		TimeoutHandler.gotResume();
-		if (TimeoutHandler.hasTimedOut()) {
+		super.onResume();
+		
+		if (TimeoutHandler.hasTimedOut(this)) {
 			Session.getInstance().setLoggedIn(false);
 			finish();
 		}
+	}
+	
+	@Override
+	protected void onPause() {
+		TimeoutHandler.gotPause();
+		super.onPause();
 	}
 }

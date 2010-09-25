@@ -10,19 +10,10 @@
 </Preference>    
 
 <CheckBoxPreference
-  android:key="idle_logout"
-  android:title="Enable idle logout"
+  android:key="close_logout"
+  android:title="Log out on close"
   android:defaultValue="true"
-  android:summary="Automatic logout after a specified number of idle seconds."/>
-
-<EditTextPreference
-  android:key="idle_logout_time"
-  android:title="Idle logout time (seconds)"
-  android:enabled="true"
-  android:numeric="integer" 
-  android:maxLength="4"
-  android:defaultValue="300"/>
-<!--    android:summary="Number of seconds of idle time before logging out."/> -->
+  android:summary="Automatic logout when the application loses focus." />
 
 <CheckBoxPreference
   android:key="display_username"

@@ -22,7 +22,6 @@ package com.kodholken.passdroid;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -88,7 +87,6 @@ public class PasswordListActivity extends TimeoutListActivity
 		loadSettingsOnResume = true;
 		// Make sure the password entries is loaded from the database
 		Session.getInstance().setNeedReload(true);
-		Session.getInstance().setIdleLogoutCallback(this);
 		
 		emptyListHelp = (TextView) findViewById(
 				                 com.kodholken.passdroid.R.id.empty_list_help);
@@ -123,7 +121,7 @@ public class PasswordListActivity extends TimeoutListActivity
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (TimeoutHandler.hasTimedOut()) {
+		if (TimeoutHandler.hasTimedOut(this)) {
 			return ;
 		}
 		
@@ -135,7 +133,6 @@ public class PasswordListActivity extends TimeoutListActivity
 		if (Session.getInstance().needReload()) {
 			loadPasswords();
 			Session.getInstance().setNeedReload(false);
-			Utils.debug("Setting position to " + listPosition);
 			list.setSelection(listPosition);
 		} else {
 			Utils.debug("Skipping loadPassword()");
@@ -145,8 +142,6 @@ public class PasswordListActivity extends TimeoutListActivity
 			loadSettingsOnResume = false;
 			loadSettings();
 		}
-		
-		Session.getInstance().bumpLogoutTimer();
 	}
 	
 	@Override
@@ -190,13 +185,11 @@ public class PasswordListActivity extends TimeoutListActivity
 			startActivity(i);
 			break;
 		case OPTION_MENU_SETTINGS:
-			startActivity(new Intent(this, Settings.class));
+			startActivity(new Intent(this, SettingsActivity.class));
 			loadSettingsOnResume = true;
 			listPosition = list.getFirstVisiblePosition();
 			break;
 		case OPTION_MENU_ADD:
-			Session.getInstance().setIdleLogout(false);
-			Session.getInstance().cancelLogoutTimer();
 			loadSettingsOnResume = true;
 			startActivity(new Intent(this, AddActivity.class));
 			listPosition = list.getFirstVisiblePosition();
@@ -239,7 +232,7 @@ public class PasswordListActivity extends TimeoutListActivity
 	
 	@Override
 	public void onUserInteraction() {
-		Session.getInstance().bumpLogoutTimer();
+		super.onUserInteraction();
 	}
 	
 	@Override
@@ -311,15 +304,7 @@ public class PasswordListActivity extends TimeoutListActivity
 		titleBarCountTextView.setText(count + " password" + quantifier);
 	}
 
-	private void loadSettings() {
-		SharedPreferences pref = PreferenceManager.
-		                                     getDefaultSharedPreferences(this);
-		Session.getInstance().setIdleLogout(pref.getBoolean("idle_logout",
-				                                            true));
-		Session.getInstance().setIdleLogoutTime(
-				   Integer.parseInt(pref.getString("idle_logout_time", "60")));
-		Session.getInstance().bumpLogoutTimer();
-	}
+	private void loadSettings() {}
 
 	@Override
 	public void idleLogoutCallback() {

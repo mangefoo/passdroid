@@ -19,9 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * Singleton class for keeping application state accessible to all classes of
  * the application.
@@ -32,13 +29,7 @@ public class Session {
 	                             // the user stored data.
     private boolean isLoggedIn;  // Indicates whether the user is currently
                                  // logged in.
-	
-    private Timer   logoutTimer;
-	private boolean idleLogout;
-	private int     idleLogoutTime;
-	private IdleLogoutCallback idleLogoutCallback;
-	private int countdown;
-	
+		
 	private boolean needReload;
 	
 	private boolean exitMain;  // Indicates whether the MainActivity should 
@@ -49,11 +40,7 @@ public class Session {
 	private Session() {
 		needReload = false;
 		isLoggedIn = false;
-		logoutTimer = null;
-		idleLogout = false;
 		exitMain = false;
-		idleLogoutTime = 0;
-		idleLogoutCallback = null;
 	}
 	
 	public static Session getInstance() {
@@ -84,9 +71,7 @@ public class Session {
 		setLoggedIn(true);
 	}
 	
-	public void logout() {
-		cancelLogoutTimer();
-		
+	public void logout() {		
 		if (!isLoggedIn) {
 			return ;
 		}
@@ -98,96 +83,7 @@ public class Session {
 		key = null;
 		setLoggedIn(false);
 	}
-	
-	public void bumpLogoutTimer() {
-		Utils.debug("Session::bumpLogoutTimer() called");
-		if (logoutTimer != null) {
-			logoutTimer.cancel();
-		}
 		
-		if (idleLogoutCallback != null) {
-			idleLogoutCallback.idleLogoutCancel();
-		}
-		
-		if (!idleLogout) {
-			return ;
-		}
-		
-		logoutTimer = new Timer();
-		logoutTimer.schedule(new TimerTask() { 
-			public void run() {
-				Utils.debug("Idle logout triggered");
-				startCountdown();
-				//logout();
-				//idleLogoutCallback.idleLogoutCallback();
-			} 
-		}, (idleLogoutTime - 10) * 1000);
-		Utils.debug("Logout timer scheduled");
-	}
-
-	private void startCountdown() {
-		countdown = 10;
-		if (idleLogoutCallback != null) {
-			idleLogoutCallback.idleLogoutCountdown(countdown);
-		}
-		logoutTimer.schedule(new TimerTask() {
-			public void run() {
-				stepCountdown();
-			}
-		}, 1000);
-	}
-	
-	private void stepCountdown() {
-		countdown--;
-		Utils.debug("Countdown: " + countdown);
-		if (countdown > 0) {
-			if (idleLogoutCallback != null) {
-				idleLogoutCallback.idleLogoutCountdown(countdown);
-			}
-			Utils.debug("Scheduling new countdown");
-			logoutTimer.schedule(new TimerTask() {
-				public void run() {
-					stepCountdown();
-				}
-			}, 1000);
-			Utils.debug("Scheduled new countdown");
-		} else {
-			logout();
-			if (idleLogoutCallback != null) {
-				idleLogoutCallback.idleLogoutCallback();
-			}
-		}
-	}
-	
-	public void cancelLogoutTimer() {
-		Utils.debug("Session::cancelLogoutTimer() called");
-		if (logoutTimer != null) {
-			logoutTimer.cancel();
-			logoutTimer.purge();
-			Utils.debug("Logout timer cancelled");
-		} else {
-			Utils.debug("Session::cancelLogoutTimer(): No timer to cancel");
-		}
-	}
-
-	public void setIdleLogout(boolean idleLogout) {
-		if (!idleLogout) {
-			cancelLogoutTimer();
-		}
-		this.idleLogout = idleLogout;
-	}
-	
-	public void setIdleLogoutTime(int idleLogoutTime) {		
-		this.idleLogoutTime = idleLogoutTime;
-		if (idleLogout) {
-			bumpLogoutTimer();
-		}
-	}
-	
-	public void setIdleLogoutCallback(IdleLogoutCallback callback) {
-		this.idleLogoutCallback = callback;
-	}
-	
 	public void setNeedReload(boolean needReload) {
 		this.needReload = needReload;
 	}
