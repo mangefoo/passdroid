@@ -21,7 +21,6 @@ package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.SQLException;
@@ -37,7 +36,7 @@ import android.widget.TextView;
 /**
  * Activity for adding new passwords.
  */
-public class AddActivity extends Activity {
+public class AddActivity extends TimeoutActivity {
 	private Button addButton;
 	private Button generateButton;
 	private TextView title;
@@ -136,6 +135,7 @@ public class AddActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			                        Intent data) {
 		if (resultCode == 1) {
+			System.out.println("Intent: " + data.getExtras().getString("password"));
 			this.password.setText(GeneratePasswordActivity.
 					              getGeneratedPassword());
 		}

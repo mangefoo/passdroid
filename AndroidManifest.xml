@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      android:versionCode="13"
+      android:versionCode="14"
       package="com.kodholken.passdroid" android:versionName="1.4">
     <supports-screens
         android:largeScreens="true"
@@ -18,7 +18,7 @@
         </activity>
         
         <activity android:label="@string/passwords"
-                  android:name=".PasswordActivity"
+                  android:name=".PasswordListActivity"
                   android:theme="@android:style/Theme.Black.NoTitleBar"/>
         
         <activity android:label="@string/about_title"
@@ -81,6 +81,11 @@
         <activity android:label="@string/generate_password_title"
                   android:theme="@android:style/Theme.Dialog"
                   android:name=".GeneratePasswordActivity"/>
+                 
+        <activity android:label="@string/generate_password_title"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:name=".DisplayPasswordActivity"/>
+        
                          
     </application>
     <uses-sdk android:minSdkVersion="3" />

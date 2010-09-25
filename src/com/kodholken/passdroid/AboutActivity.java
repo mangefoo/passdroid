@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
-public class AboutActivity extends PassdroidActivity {
+public class AboutActivity extends TimeoutActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -21,7 +21,6 @@ package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,7 +38,7 @@ import android.widget.TextView;
  * Activity that displays a password entry and let the user choose to edit or
  * delete the entry.
  */
-public class ShowActivity extends Activity {
+public class ShowActivity extends TimeoutActivity {
 	public static final int OPTION_MENU_EDIT     = 0;
 	public static final int OPTION_MENU_DELETE   = 1;
 	public static final int OPTION_MENU_SETTINGS = 2;

@@ -21,7 +21,6 @@ package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.SQLException;
@@ -34,7 +33,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class EditActivity extends Activity {
+public class EditActivity extends TimeoutActivity {
 	private Button saveButton;
 	private Button cancelButton;
 	private Button generateButton;

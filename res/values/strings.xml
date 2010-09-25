@@ -66,6 +66,7 @@ and press OK.</string>
 <string name="options_edit">Edit</string>
 <string name="options_delete">Delete</string>
 <string name="options_impexp">Import / Export</string>
+<string name="options_generate_password">Password Generator</string>
 
 <string name="add_password_text">Add Password</string>
 <string name="empty_list_help">Press the menu button and choose <b>Add Password</b> to create new password entries.</string>

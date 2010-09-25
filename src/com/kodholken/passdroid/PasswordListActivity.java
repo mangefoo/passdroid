@@ -20,7 +20,6 @@
 package com.kodholken.passdroid;
 
 import android.app.AlertDialog;
-import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,7 +40,7 @@ import android.widget.TextView;
 /**
  * Activity that displays the user passwords.
  */
-public class PasswordActivity extends ListActivity
+public class PasswordListActivity extends TimeoutListActivity
                               implements IdleLogoutCallback,
                                          PasswordModelListener {
 	private static final int OPTION_MENU_ADD      = 1;
@@ -49,6 +48,7 @@ public class PasswordActivity extends ListActivity
 	private static final int OPTION_MENU_ABOUT    = 4;
 	private static final int OPTION_MENU_DROPDB   = 5;
 	private static final int OPTION_MENU_LOGOUT   = 6;
+	private static final int OPTION_MENU_GENERATE = 7;
 	
 	private boolean hasBackKeyDown;
 	// Used to keep the activity from reloading the settings on resumes where
@@ -64,7 +64,7 @@ public class PasswordActivity extends ListActivity
 	private Handler      countdownHandler;
 	private TextView     titleBarCountTextView;
 	
-	public PasswordActivity() {
+	public PasswordListActivity() {
 		loadSettingsOnResume = false;
 		hasBackKeyDown = false;
 		countdownLayout = null;
@@ -123,6 +123,9 @@ public class PasswordActivity extends ListActivity
 	@Override
 	public void onResume() {
 		super.onResume();
+		if (TimeoutHandler.hasTimedOut()) {
+			return ;
+		}
 		
 		if (!Session.getInstance().isLoggedIn()) {
 			finish();
@@ -153,6 +156,10 @@ public class PasswordActivity extends ListActivity
 		MenuItem item = menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE,
 				                 getString(R.string.options_add));
 		item.setIcon(android.R.drawable.ic_menu_add);
+		
+		item = menu.add(Menu.NONE, OPTION_MENU_GENERATE, Menu.NONE,
+				        getString(R.string.options_generate_password));
+		item.setIcon(android.R.drawable.ic_menu_rotate);
 		
 		item = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE,
 				        getString(R.string.options_settings));
@@ -199,6 +206,11 @@ public class PasswordActivity extends ListActivity
 			SQLiteDatabase db = passwordData.getWritableDatabase();
 			passwordData.onUpgrade(db, 0, 0);
 			db.close();
+			break;
+		case OPTION_MENU_GENERATE:
+			Intent generateIntent = new Intent(this, GeneratePasswordActivity.class);
+			generateIntent.putExtra("displayPassword", 1);
+			startActivity(generateIntent);
 			break;
 		case OPTION_MENU_LOGOUT:
 			confirmLogout();

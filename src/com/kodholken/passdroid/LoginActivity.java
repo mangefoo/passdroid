@@ -62,8 +62,13 @@ public class LoginActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		
+		// Make sure to reset the timeout. Otherwise we will be redirected
+		// to this screen after the login.
+		TimeoutHandler.setTimeout(false);
 		if (Session.getInstance().isLoggedIn()) {
 			finish();
+			return ;
 		}
 		
 		((EditText) this.findViewById(R.id.login_password)).setText("");

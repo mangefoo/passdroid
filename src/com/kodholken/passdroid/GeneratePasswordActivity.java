@@ -22,8 +22,10 @@ package com.kodholken.passdroid;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -34,7 +36,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 
-public class GeneratePasswordActivity extends Activity {
+public class GeneratePasswordActivity extends TimeoutActivity {
+	private static final String passwordLengthKey = "passwordLength";
+	private static final String passwordCharsetKey = "passwordCharset";
 	private static final String numericCharset = "0123456789";
 	private static final String alphabeticCharset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static final String alphanumericCharset = alphabeticCharset + numericCharset;
@@ -44,11 +48,13 @@ public class GeneratePasswordActivity extends Activity {
 	private ImageButton incButton;
 	private ImageButton decButton;
 	private Spinner spinner;
+	private boolean displayPassword;
 	
 	private static final int MAX_PASSWORD_LENGTH = 99;
 	private static final int DEFAULT_PASSWORD_LENGTH = 10;
 	
-	// XXX - Ouch! Find better solution. It works because the architecture only
+	// We save the generated password here for the caller to retrieve when we
+	// have finished. 
 	//       allows a single instance if the activity at the same time, but...
 	private static String generatedPassword = null;
 	
@@ -61,9 +67,15 @@ public class GeneratePasswordActivity extends Activity {
 		setContentView(R.layout.generate_password);
 		
 		lengthField = (EditText)  findViewById(R.id.length_input);
-		lengthField.setText("" + DEFAULT_PASSWORD_LENGTH);
+		lengthField.setText("" + getPasswordLength());
 		
 		spinner = (Spinner) findViewById(R.id.charset);
+		spinner.setSelection(getCharset());
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null && extras.containsKey("displayPassword")) {
+			displayPassword = true;
+		}
 		
 		setupIncButton();
 		setupDecButton();
@@ -161,11 +173,25 @@ public class GeneratePasswordActivity extends Activity {
 	private void setupGenerateButton() {
 		Button generateButton = (Button) findViewById(R.id.generate_button);
 		
+		final Intent ri = this.getIntent();
+		final Context context = this;
 		generateButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				generatePassword();				
-				setResult(1);
+				Intent result = new Intent(
+	             	"com.kodholken.passdroid.PASSWORD_RESULT_ACTION");
+				ri.putExtra("password", "new value");
+				result.putExtra("password", generatedPassword);
+				generatePassword();
+				if (displayPassword) {
+					Intent generateIntent = new Intent(context,
+							                    DisplayPasswordActivity.class);
+					generateIntent.putExtra("password",
+							  GeneratePasswordActivity.getGeneratedPassword());
+					startActivity(generateIntent);
+				} else {
+					setResult(1, result);
+				}
 				finish();
 			}
 		});
@@ -199,12 +225,36 @@ public class GeneratePasswordActivity extends Activity {
 		}
 		
 		int length = Integer.parseInt(lengthField.getText().toString());
-		while (length-- > 0) {
+		int i = 0;
+		while (i++ < length) {
 			generatedPassword += charset.charAt(random.nextInt(charset.length()));
 		}
+		
+		storePasswordLength(length);
+		storeCharset(pos);
 	}
 	
 	public static String getGeneratedPassword() {
 		return generatedPassword;
+	}
+	
+	private int getPasswordLength() {
+		return PreferenceManager.getDefaultSharedPreferences(this).
+		                     getInt(passwordLengthKey, DEFAULT_PASSWORD_LENGTH);
+	}
+	
+	private void storePasswordLength(int length) {
+		PreferenceManager.getDefaultSharedPreferences(this).edit().
+		                            putInt(passwordLengthKey, length).commit();
+	}
+	
+	private int getCharset() {
+		return PreferenceManager.getDefaultSharedPreferences(this).
+							 getInt(passwordCharsetKey, 0);
+	}
+	
+	private void storeCharset(int charset) {
+		PreferenceManager.getDefaultSharedPreferences(this).edit().
+								  putInt(passwordCharsetKey, charset).commit();
 	}
 }

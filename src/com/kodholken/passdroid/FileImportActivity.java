@@ -21,7 +21,6 @@ package com.kodholken.passdroid;
 
 import java.io.File;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -33,7 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FileImportActivity extends Activity {
+public class FileImportActivity extends TimeoutActivity {
 	private Button cancelButton;
 	private Button importButton;
 	private TextView importDesc2;

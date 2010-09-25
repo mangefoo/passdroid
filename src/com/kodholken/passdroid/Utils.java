@@ -44,7 +44,7 @@ public class Utils {
 	}
 	
 	public static void startPasswordActivity(Context context) {
-		Intent i = new Intent(context, PasswordActivity.class);
+		Intent i = new Intent(context, PasswordListActivity.class);
 		context.startActivity(i);
 	}
 	

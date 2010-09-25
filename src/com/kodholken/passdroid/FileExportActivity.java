@@ -19,7 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -30,7 +29,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class FileExportActivity extends Activity {
+public class FileExportActivity extends TimeoutActivity {
 	private Button cancelButton;
 	private Button exportButton;
 	private EditText exportFilename;
