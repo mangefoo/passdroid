@@ -33,6 +33,7 @@
     <EditText
       android:id="@+id/system"
       android:singleLine="true"
+	  android:inputType="textVisiblePassword"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"/>
 
@@ -45,6 +46,7 @@
     <EditText
       android:id="@+id/username"
       android:singleLine="true"
+      android:inputType="textVisiblePassword"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"/>
 
@@ -57,6 +59,7 @@
     <EditText
       android:id="@+id/password"
       android:singleLine="true"
+      android:inputType="textVisiblePassword"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"/>
  

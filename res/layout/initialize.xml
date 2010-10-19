@@ -15,14 +15,14 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:maxLines="1"
-    android:password="true"/>
+    android:inputType="textPassword"/>
 
   <EditText
     android:id="@+id/master_password_2"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:maxLines="1"
-    android:password="true"/>
+    android:inputType="textPassword"/>
 
   <Button
     android:id="@+id/ok_button"
