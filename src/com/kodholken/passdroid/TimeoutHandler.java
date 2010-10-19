@@ -23,7 +23,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 public class TimeoutHandler {
-	private static final int LIMIT_DEFAULT = 1000;
+	private static final int LIMIT_DEFAULT = 5000;
 	
 	private static long paused = 0;
 	private static long limit = LIMIT_DEFAULT;
