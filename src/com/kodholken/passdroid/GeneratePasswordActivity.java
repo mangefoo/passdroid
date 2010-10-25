@@ -55,7 +55,7 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 	
 	// We save the generated password here for the caller to retrieve when we
 	// have finished. 
-	//       allows a single instance if the activity at the same time, but...
+	// It only allows a single instance if the activity at the same time, but...
 	private static String generatedPassword = null;
 	
 	@Override

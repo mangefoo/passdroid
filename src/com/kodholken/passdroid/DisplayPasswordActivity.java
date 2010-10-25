@@ -19,7 +19,12 @@
 
 package com.kodholken.passdroid;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.ClipboardManager;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -31,9 +36,43 @@ public class DisplayPasswordActivity extends TimeoutActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		setContentView(R.layout.display_password);
-				
+		
 		((TextView) findViewById(R.id.password)).setText(
 								getIntent().getExtras().getString("password"));
-
+		setupClipboardAction();
+	}
+	
+	/**
+	 * Set up a clickable password. When clicked the user will be prompted to
+	 * choose if the password should be copied to the clipboard.
+	 */
+	private void setupClipboardAction() {
+		final TextView passwordView = (TextView) findViewById(R.id.password);
+		final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		alertDialog.setTitle("Copy to clipboard");
+		alertDialog.setMessage("Copy the password to clipboard?");
+		
+		alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
+				             new DialogInterface.OnClickListener() { 
+			public void onClick(DialogInterface dialog, int which) {
+				ClipboardManager clipboard = 
+					    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+				clipboard.setText(passwordView.getText());
+			}
+		});
+		
+		alertDialog.setButton(AlertDialog.BUTTON2, "No",
+				              new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {}
+		});
+		
+		passwordView.setOnClickListener(
+			new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					alertDialog.show();
+				}
+			}
+		);
 	}
 }
