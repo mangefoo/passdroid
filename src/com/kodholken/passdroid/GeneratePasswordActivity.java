@@ -24,16 +24,33 @@ import java.util.Random;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Shader;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.GradientDrawable.Orientation;
+import android.graphics.drawable.shapes.RectShape;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Layout;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 public class GeneratePasswordActivity extends TimeoutActivity {
@@ -48,6 +65,7 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 	private ImageButton incButton;
 	private ImageButton decButton;
 	private Spinner spinner;
+	private ImageView strengthImage;
 	private boolean displayPassword;
 	
 	private static final int MAX_PASSWORD_LENGTH = 99;
@@ -67,20 +85,127 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 		setContentView(R.layout.generate_password);
 		
 		lengthField = (EditText)  findViewById(R.id.length_input);
-		lengthField.setText("" + getPasswordLength());
-		
-		spinner = (Spinner) findViewById(R.id.charset);
-		spinner.setSelection(getCharset());
+		lengthField.setText("" + getStoredPasswordLength());
 		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null && extras.containsKey("displayPassword")) {
 			displayPassword = true;
 		}
 		
+		setupStrengthImage();
+		setupSpinner();
 		setupIncButton();
 		setupDecButton();
 		setupCancelButton();
 		setupGenerateButton();
+		updateStrength();
+	}
+	
+	private void updateStrength() {
+		int length = Integer.parseInt(lengthField.getText().toString());
+		String charset = getCharset(spinner.getSelectedItemPosition());
+		
+		int strength = (int) ((Math.log(charset.length()) / Math.log(2)) * length);
+		//LinearGradient strengthMeter = new LinearGradient(0, 0, 50, 10, new int[] { 0x70ff0000, 0x70ffff00 }, null, Shader.TileMode.CLAMP);
+		GradientDrawable strengthMeter = new GradientDrawable(Orientation.LEFT_RIGHT, new int[] { 0x90ff0000, 0x90ffff00, 0x9000ff00 });
+
+		ViewGroup vg = (ViewGroup) findViewById(R.id.layout_id);
+		
+		if (vg == null) {
+			return ;
+		}
+
+		int layoutWidth = vg.getWidth() - vg.getPaddingLeft() - vg.getPaddingLeft();
+
+		if (layoutWidth <= 0) {
+			System.out.println("Layout width: " + layoutWidth);
+			return;
+		}
+		
+		strengthMeter.setSize(layoutWidth, 10);
+
+		//Rect bounds = new Rect(0, 0, 5, 10);
+		//strengthMeter.setSize((int) (layoutWidth * ((double) strength) / 80.0), 10);
+		//strengthImage.setImageDrawable(strengthMeter);
+		Bitmap b = createStrengthBitmap(strength / 80.0, layoutWidth);
+		strengthImage.setImageBitmap(b);
+
+		System.out.println("Strength: " + strength);
+	}
+	
+	private Bitmap createStrengthBitmap(double strength, int width) {
+		Bitmap bm = Bitmap.createBitmap(width, 10, Bitmap.Config.ARGB_8888);
+		
+		int color = 0xffffffff;
+		int scaleColor = 0xffffffff;
+		
+		if (strength > 1.0) {
+			strength = 1.0;
+		}
+		
+		if (strength < 0.5) {
+			color = 0xffff0000;
+			color += (int) (255 * (2.0 * strength)) << 8;
+		} else {
+			color = 0xff00ff00;
+			color += (int) (255 * (1.0 - 2.0 * strength)) << 16;
+		}
+	
+		bm.setPixel(0, 3, scaleColor);
+		bm.setPixel(0, 4, scaleColor);
+		bm.setPixel(0, 5, scaleColor);
+		bm.setPixel(0, 6, scaleColor);
+		bm.setPixel(0, 7, scaleColor);
+		bm.setPixel(0, 8, scaleColor);
+		bm.setPixel(width - 1, 3, scaleColor);
+		bm.setPixel(width - 1, 4, scaleColor);
+		bm.setPixel(width - 1, 5, scaleColor);
+		bm.setPixel(width - 1, 6, scaleColor);
+		bm.setPixel(width - 1, 7, scaleColor);
+		bm.setPixel(width - 1, 8, scaleColor);
+		for (int i = 0; i < width; i++) {
+			bm.setPixel(i, 9, scaleColor);
+		}
+
+		int max = (int) (width * strength);
+		if (max > width - 1) {
+			max = width - 1;
+		}
+		
+		for (int i = 1; i < max; i++) {
+			bm.setPixel(i, 3, color);
+			bm.setPixel(i, 4, color);
+			bm.setPixel(i, 5, color);
+			bm.setPixel(i, 6, color);
+			bm.setPixel(i, 7, color);
+			bm.setPixel(i, 8, color);
+		}
+		
+		
+		return bm;
+	}
+	
+	private void setupStrengthImage() {
+		strengthImage = (ImageView) findViewById(R.id.strength_meter);
+	}
+	
+	private void setupSpinner() {
+		spinner = (Spinner) findViewById(R.id.charset);
+		spinner.setSelection(getStoredCharset());
+		
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				updateStrength();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				updateStrength();
+			}			
+		});
 	}
 	
 	private void setupIncButton() {
@@ -100,6 +225,7 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 				}
 				
 				lengthField.setText("" + current);
+				updateStrength();
 			}
 		});
 		
@@ -139,6 +265,7 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 				}
 				
 				lengthField.setText("" + current);
+				updateStrength();
 			}
 		});
 		
@@ -197,13 +324,9 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 		});
 	}
 	
-	private void generatePassword() {
-		generatedPassword = "";
-		Random random = new SecureRandom();
-		
-		int pos = spinner.getSelectedItemPosition();
+	private String getCharset(int pos) {
 		if (pos == Spinner.INVALID_POSITION) {
-			return ;
+			return alphanumericCharset;
 		}
 		
 		String charset;
@@ -224,6 +347,15 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 			charset = alphanumericCharset;
 		}
 		
+		return charset;
+	}
+	
+	private void generatePassword() {
+		generatedPassword = "";
+		Random random = new SecureRandom();
+		
+		String charset = getCharset(spinner.getSelectedItemPosition());
+		
 		int length = Integer.parseInt(lengthField.getText().toString());
 		int i = 0;
 		while (i++ < length) {
@@ -231,14 +363,14 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 		}
 		
 		storePasswordLength(length);
-		storeCharset(pos);
+		storeCharset(spinner.getSelectedItemPosition());
 	}
 	
 	public static String getGeneratedPassword() {
 		return generatedPassword;
 	}
 	
-	private int getPasswordLength() {
+	private int getStoredPasswordLength() {
 		return PreferenceManager.getDefaultSharedPreferences(this).
 		                     getInt(passwordLengthKey, DEFAULT_PASSWORD_LENGTH);
 	}
@@ -248,7 +380,7 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 		                            putInt(passwordLengthKey, length).commit();
 	}
 	
-	private int getCharset() {
+	private int getStoredCharset() {
 		return PreferenceManager.getDefaultSharedPreferences(this).
 							 getInt(passwordCharsetKey, 0);
 	}
