@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2011  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -97,5 +97,21 @@ public class Utils {
 		}
 
 		return Base64.encode(xor);
+	}
+
+	public static String escapeXMLChars(String s) {
+		return s.replaceAll("&",  "&amp;")
+		 		.replaceAll("'",  "&apos;")
+		 		.replaceAll("\"", "&quot;")
+		 		.replaceAll("<",  "&lt;")
+		 		.replaceAll(">",  "&gt;");
+	}
+	
+	public static String unescapeXMLChars(String s) {
+		return s.replaceAll("&amp;",  "&")
+		 		.replaceAll("&apos;", "'")
+		 		.replaceAll("&quot;", "\"")
+		 		.replaceAll("&lt;",   "<")
+		 		.replaceAll("&gt;",   ">");
 	}
 }

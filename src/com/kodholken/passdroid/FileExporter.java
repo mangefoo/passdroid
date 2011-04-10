@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2011  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,8 +48,7 @@ public class FileExporter {
 			ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 			ps.println("<passdroid version=\"" + appVersion + "\">");
 			for (PasswordEntry entry : passwords) {
-				//String system = "<![CDATA[" + entry.getDecSystem().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
-				ps.println("  <system name=\"" + entry.getDecSystem() + "\">");
+				ps.println("  <system name=\"" + Utils.escapeXMLChars(entry.getDecSystem()) + "\">");
 				if (entry.getDecUsername() != null) {
 					String username = "<![CDATA[" + entry.getDecUsername().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
 					ps.println("    <username>" + username + "</username>");

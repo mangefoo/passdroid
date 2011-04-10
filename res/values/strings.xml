@@ -17,7 +17,7 @@ to prevent access without the master password.\n\
 \n\
 http://passdroid.kodholken.com/\n\
 \n\
-Copyright &#169; 2009-2010  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
+Copyright &#169; 2009-2011  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
 \n\
 Application icon by VisualPharm (http://www.visualpharm.com/).\n\
 \n\
@@ -87,14 +87,14 @@ removed from the phone as quickly as possible and stored securely.</string>
 This will import a database of passwords that has been exported from Passdroid. \
 The import will remove any existing passwords on this device.</string>
 
-<string name="import_description_file_present">\
+<string name="import_description_file_present" formatted="false">\
 The file %f contains %n entries.</string>
 
 <string name="import_description_file_missing">\
 Import not available. To enable it copy your exported password file to\n
 <b>%f</b>.</string>
 
-<string name="import_description_failure">Failed to read %f: %e.</string>
+<string name="import_description_failure" formatted="false">Failed to read %f: %e.</string>
 
 <string name="generate_password_title">Generate password</string>
 
