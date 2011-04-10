@@ -20,18 +20,22 @@
 package com.kodholken.passdroid;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.text.ClipboardManager;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -82,6 +86,7 @@ public class PasswordListActivity extends TimeoutListActivity
 		setContentView(R.layout.password);
 				
 		list = (ListView) findViewById(android.R.id.list);
+		initLongClickListener();
 		
 		// Make sure settings are loaded on first run.
 		loadSettingsOnResume = true;
@@ -117,7 +122,7 @@ public class PasswordListActivity extends TimeoutListActivity
 		
 		PasswordModel.getInstance(this).addListener(this);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -217,7 +222,7 @@ public class PasswordListActivity extends TimeoutListActivity
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-
+		
 		PasswordModel model = PasswordModel.getInstance(this);
 		
 		Intent i = new Intent(this, ShowActivity.class);
@@ -257,6 +262,47 @@ public class PasswordListActivity extends TimeoutListActivity
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Set up a long click handler for the list view. The user will be presented
+	 * with an option to copy the password to clipboard.
+	 */
+	private void initLongClickListener() {
+		final Context context = this;
+
+		list.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> a, View v,
+										   int position, long id) {
+
+				final String password = PasswordModel.getInstance(context)
+				                                     .getPasswords()[position]
+				                                     .getDecPassword();
+
+				final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+				alertDialog.setTitle("Copy to clipboard");
+				alertDialog.setMessage("Copy the password to clipboard?");
+				
+				alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
+						             new DialogInterface.OnClickListener() { 
+					public void onClick(DialogInterface dialog, int which) {
+						ClipboardManager clipboard = 
+							    (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+						clipboard.setText(password);
+					}
+				});
+				
+				alertDialog.setButton(AlertDialog.BUTTON2, "No",
+						              new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {}
+				});
+				
+				alertDialog.show();
+				
+				return true;
+			}
+		});
 	}
 	
 	private void confirmLogout() {
