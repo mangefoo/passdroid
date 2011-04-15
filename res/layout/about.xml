@@ -25,7 +25,7 @@
     <ImageView android:id="@+id/about_image"
 	           android:layout_width="wrap_content"
 	           android:layout_height="wrap_content"
-	           android:src="@drawable/safe_icon_48x48"
+	           android:src="@drawable/safe_icon_large"
 	           android:gravity="right"
 	           android:layout_alignRight="@+d/dummy"
 	           android:layout_alignWithParentIfMissing="true"/>
