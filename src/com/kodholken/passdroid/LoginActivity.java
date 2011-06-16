@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -34,6 +35,7 @@ import android.widget.EditText;
  */
 public class LoginActivity extends Activity {
 	private Button loginButton;
+	private EditText passwordView;
 	private boolean hasBackKeyDown;
 	
 	@Override
@@ -48,6 +50,22 @@ public class LoginActivity extends Activity {
 		}
 
 		setContentView(R.layout.login);
+		
+		passwordView = (EditText) findViewById(R.id.login_password);
+		passwordView.setOnKeyListener(new OnKeyListener() {
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if (event.getAction() == KeyEvent.ACTION_DOWN) {
+					switch (keyCode) {
+					case KeyEvent.KEYCODE_DPAD_CENTER:
+					case KeyEvent.KEYCODE_ENTER:
+						handleLogin();
+						return true;
+					}
+				}
+				return false;
+			}
+		});
 
 		loginButton = (Button) this.findViewById(R.id.login_button);
 		
