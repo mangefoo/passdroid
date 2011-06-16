@@ -118,19 +118,13 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 		int layoutWidth = vg.getWidth() - vg.getPaddingLeft() - vg.getPaddingLeft();
 
 		if (layoutWidth <= 0) {
-			System.out.println("Layout width: " + layoutWidth);
 			return;
 		}
 		
 		strengthMeter.setSize(layoutWidth, 10);
 
-		//Rect bounds = new Rect(0, 0, 5, 10);
-		//strengthMeter.setSize((int) (layoutWidth * ((double) strength) / 80.0), 10);
-		//strengthImage.setImageDrawable(strengthMeter);
 		Bitmap b = createStrengthBitmap(strength / 80.0, layoutWidth);
 		strengthImage.setImageBitmap(b);
-
-		System.out.println("Strength: " + strength);
 	}
 	
 	private Bitmap createStrengthBitmap(double strength, int width) {
@@ -235,11 +229,9 @@ public class GeneratePasswordActivity extends TimeoutActivity {
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					incButton.setBackgroundResource(R.drawable.picker_up_pressed);
-					System.out.println("Down");
 					break;
 				case MotionEvent.ACTION_UP:
 					incButton.setBackgroundResource(R.drawable.picker_up);
-					System.out.println("Up");
 					break;
 				}
 				return false;

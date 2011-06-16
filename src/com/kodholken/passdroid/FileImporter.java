@@ -45,13 +45,11 @@ import android.util.Log;
 public class FileImporter {
 	private String filename;
 	private String appVersion;
-	private boolean loaded;
 	private PasswordEntry[] passwordEntries;
 	
 	public FileImporter(String filename, String appVersion) {
 		this.filename = filename;
 		this.appVersion = appVersion;
-		loaded = false;
 	}
 	
 	public void parse() throws FileImporterException {
@@ -59,23 +57,19 @@ public class FileImporter {
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			InputStream input = createInputStream();
-			//Document doc = builder.parse(new File(filename));
 			Document doc = builder.parse(input);
 			Element root = doc.getDocumentElement();
-			NodeList items = root.getElementsByTagName("passdroid");
-			if (items.getLength() != 1) {
-				throw new FileImporterException("Invalid file format");
+			if (root == null || !root.getTagName().equals("passdroid")) {
+				throw new FileImporterException("Invalid file format: " + (root == null ? "<empty>" : root.getTagName()));
 			}
-			
-			Node versionNode = items.item(0).getAttributes().getNamedItem("version");
+
+			Node versionNode = root.getAttributes().getNamedItem("version");
 			if (versionNode == null) {
 				throw new FileImporterException("Missing version attribute on passdroid tag");
 			}
 			String version = versionNode.getNodeValue();
 			Log.d(FileImporter.class.getName(), "Import file version: " + version);
-						
-			parseImportFile(version, items.item(0));
-			loaded = true;
+			parseImportFile(version, root);
 		} catch (ParserConfigurationException ex) {
 			throw new FileImporterException(ex);
 		} catch (IOException ex) {
@@ -98,8 +92,6 @@ public class FileImporter {
 		String version = null;
 		FileInputStream fstream = new FileInputStream(filename);
 		
-		System.out.println("Getting file version\n");
-
 		DataInputStream in = new DataInputStream(fstream);
 	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	    
@@ -107,9 +99,7 @@ public class FileImporter {
     	Pattern p = Pattern.compile(".*passdroid version=\\\"([0-9]+.[0-9]+)\\\".*");
 	    while ((s = br.readLine()) != null) {
 	    	Matcher m = p.matcher(s);
-	    	System.out.println("Checking row '" + s + "'");
 	    	if (m.matches()) {
-	    		System.out.println("Got version " + m.group(1));
 	    		version = m.group(1);
 	    		break;
 	    	}
@@ -134,11 +124,8 @@ public class FileImporter {
 		
 		if (fileVersion.compareTo(compVersion) > 0) {
 			// Version 1.7 or later is passed as a FileInputStream instance.
-			System.out.println("Creating FileInputStream");
 			return new FileInputStream(filename);
 		}
-		
-		System.out.println("Creating ByteArrayInputStream");
 		
 		/* 
 		 * If the version is 1.6 or earlier we need to pass the exported file
@@ -169,8 +156,6 @@ public class FileImporter {
 	    in.close();
 	    fstream.close();
 	    
-	    System.out.println("Converted XML: " + sb.toString());
-	    
 	    return new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
 	}
 		
@@ -197,10 +182,6 @@ public class FileImporter {
 	
 	public PasswordEntry [] getPasswordEntries() {
 		return passwordEntries;
-	}
-	
-	public boolean isLoaded() {
-		return loaded;
 	}
 	
 	private interface ImportFileParser {
