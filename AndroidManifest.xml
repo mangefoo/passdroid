@@ -51,30 +51,16 @@
         <activity android:label="@string/change_password_title"
                   android:theme="@android:style/Theme.Dialog"        
                   android:name=".ChangePasswordActivity">
-            <intent-filter>
-                <action android:name="com.kodholken.passdroid.CHANGE_PASSWORD"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
 
         <activity android:label="@string/file_export_title"
                   android:theme="@android:style/Theme.Dialog"        
                   android:name=".FileExportActivity">
-                  
-            <intent-filter>
-                <action android:name="com.kodholken.passdroid.FILE_EXPORT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
         
         <activity android:label="@string/file_import_title"
                   android:theme="@android:style/Theme.Dialog"        
                   android:name=".FileImportActivity">
-                  
-            <intent-filter>
-                <action android:name="com.kodholken.passdroid.FILE_IMPORT"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
 
                   

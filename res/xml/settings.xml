@@ -5,8 +5,9 @@
 <Preference
   android:key="change_password"
   android:title="Change master password">
-  
-   <intent android:action="com.kodholken.passdroid.CHANGE_PASSWORD"/>
+
+   <intent android:targetPackage="com.kodholken.passdroid"
+           android:targetClass="com.kodholken.passdroid.ChangePasswordActivity"/>
 </Preference>    
 
 <CheckBoxPreference
@@ -27,15 +28,17 @@
   <Preference
     android:key="file_export"
     android:title="@string/file_export_title">
-  
-    <intent android:action="com.kodholken.passdroid.FILE_EXPORT"/>
+
+    <intent android:targetPackage="com.kodholken.passdroid"
+            android:targetClass="com.kodholken.passdroid.FileExportActivity"/>
   </Preference>
   
   <Preference
     android:key="file_import"
     android:title="@string/file_import_title">
-  
-    <intent android:action="com.kodholken.passdroid.FILE_IMPORT"/>
+
+    <intent android:targetPackage="com.kodholken.passdroid"
+            android:targetClass="com.kodholken.passdroid.FileImportActivity"/>
   </Preference>
 </PreferenceScreen>
   
