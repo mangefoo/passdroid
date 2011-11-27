@@ -135,7 +135,6 @@ public class AddActivity extends TimeoutActivity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			                        Intent data) {
 		if (resultCode == 1) {
-			System.out.println("Intent: " + data.getExtras().getString("password"));
 			this.password.setText(GeneratePasswordActivity.
 					              getGeneratedPassword());
 		}
