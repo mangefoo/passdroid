@@ -27,11 +27,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 public class FileExportActivity extends TimeoutActivity {
     private Button cancelButton;
     private Button exportButton;
+    private CheckBox encryptFileCheckbox;
     private EditText exportFilename;
 
     @Override
@@ -63,17 +65,23 @@ public class FileExportActivity extends TimeoutActivity {
                 doExport();
             }
         });
+        
+        encryptFileCheckbox = (CheckBox) findViewById(R.id.encrypt_export);
     }
 
     private void doExport() {
         FileExporter exporter = new FileExporter(exportFilename.getText().toString(),
                                                  Utils.getVersion(this));
         try {
-            boolean res = exporter.export(PasswordModel.getInstance(this).getPasswords(), true);
-            if (res) {
-                showDialog("Success", "Database successfully exported to " + exportFilename.getText().toString());
+            if (encryptFileCheckbox.isChecked()) {
+                exporter.exportEncrypted(
+                                Session.getInstance().getKey(),
+                                PasswordModel.getInstance(this).getPasswords());
+                showDialog("Success", getString(R.string.export_successful, exportFilename.getText().toString()));
             } else {
-                showDialog("Failure", "Export failed");
+                exporter.exportCleartext(
+                        PasswordModel.getInstance(this).getPasswords());
+                showDialog("Success", getString(R.string.export_cleartext_successful, exportFilename.getText().toString()));
             }
         } catch (ExportException e) {
             Utils.alertDialog(this, "Failure", "Export failed: " + e.getMessage());

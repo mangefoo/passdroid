@@ -22,6 +22,7 @@ package com.kodholken.passdroid;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,30 +54,63 @@ public class FileImporter {
 	}
 	
 	public void parse() throws FileImporterException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			InputStream input = createInputStream();
-			Document doc = builder.parse(input);
-			Element root = doc.getDocumentElement();
-			if (root == null || !root.getTagName().equals("passdroid")) {
-				throw new FileImporterException("Invalid file format: " + (root == null ? "<empty>" : root.getTagName()));
-			}
+	    try {
+	        parse(createInputStream());
+	    } catch (IOException ex) {
+	        throw new FileImporterException(ex);
+	    }
+	}
+	
+	public void parse(InputStream input) throws FileImporterException {
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    try {
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+	        Document doc = builder.parse(input);
+	        Element root = doc.getDocumentElement();
+	        if (root == null || !root.getTagName().equals("passdroid")) {
+	            throw new FileImporterException("Invalid file format: " + (root == null ? "<empty>" : root.getTagName()));
+	        }
 
-			Node versionNode = root.getAttributes().getNamedItem("version");
-			if (versionNode == null) {
-				throw new FileImporterException("Missing version attribute on passdroid tag");
-			}
-			String version = versionNode.getNodeValue();
-			Log.d(FileImporter.class.getName(), "Import file version: " + version);
-			parseImportFile(version, root);
-		} catch (ParserConfigurationException ex) {
-			throw new FileImporterException(ex);
-		} catch (IOException ex) {
-			throw new FileImporterException(ex);
-		} catch (SAXException ex) {
-			throw new FileImporterException(ex);
-		}
+	        Node versionNode = root.getAttributes().getNamedItem("version");
+	        if (versionNode == null) {
+	            throw new FileImporterException("Missing version attribute on passdroid tag");
+	        }
+	        String version = versionNode.getNodeValue();
+	        Log.d(FileImporter.class.getName(), "Import file version: " + version);
+	        parseImportFile(version, root);
+	    } catch (ParserConfigurationException ex) {
+	        throw new FileImporterException(ex);
+	    } catch (IOException ex) {
+	        throw new FileImporterException(ex);
+	    } catch (SAXException ex) {
+	        throw new FileImporterException(ex);
+	    }
+	}
+	
+	public boolean isEncrypted() throws FileImporterException {
+	    InputStream is = null;
+
+	    try {
+	        byte [] sig = new byte[3];
+                is = new FileInputStream(new File(filename));
+                if (is.read(sig) != 3) {
+                    throw new FileImporterException("Could not read signature");
+                }
+
+                if (sig[0] != 's' || sig[1] != 'q' || sig[2] != 't') {
+                    return false;
+                }
+            } catch (Exception e) {
+                throw new FileImporterException(e.getMessage());
+            } finally {
+                if (is != null) {
+                    try {
+                        is.close();
+                    } catch (IOException e) {}
+                }
+            }
+
+            return true;
 	}
 	
 	/**
@@ -141,7 +175,7 @@ public class FileImporter {
 	    
 	    String s;
 	    StringBuilder sb = new StringBuilder();
-    	Pattern p = Pattern.compile("(.*)<system name=\\\"([^\"]+)\\\">.*");
+	    Pattern p = Pattern.compile("(.*)<system name=\\\"([^\"]+)\\\">.*");
 	    while ((s = br.readLine()) != null) {
 	    	Matcher m = p.matcher(s);
 	    	if (m.matches()) {
@@ -234,4 +268,49 @@ public class FileImporter {
 			return entry;
 		}
 	}
+
+    public void parseEncrypted(byte[] key) throws FileImporterException {
+        try {
+            File file = new File(filename);
+            long size = file.length();
+
+            // File needs to be atleast 3 bytes to have room for encryption signature
+            if (size < 3) {
+                throw new FileImporterException("File too small: " + size);
+            }
+
+            size -= 3;
+            byte[] buffer = new byte[(int) size];
+
+            FileInputStream fstream = new FileInputStream(filename);
+
+            if (fstream.read(buffer, 0, 3) != 3) {
+                throw new FileImporterException("Failed to read signature");
+            }
+
+            int nread, hasRead = 0;
+            while (hasRead < size) {
+                nread = fstream.read(buffer, hasRead, (int) (size - hasRead));
+                if (nread == -1) {
+                    break;
+                }
+                hasRead += nread;
+            }
+            fstream.close();
+
+            if (hasRead != size) {
+                throw new FileImporterException("Failed to read encrypted data");
+            }
+
+            byte[] decrypted = Crypto.decryptAesCbc(key, buffer);
+            if (decrypted == null) {
+                throw new FileImporterException("Decryption failed");
+            }
+            
+            InputStream is = new ByteArrayInputStream(decrypted, 2 /* Skip salt */, decrypted.length - 1);
+            parse(is);
+        } catch (IOException ex) {
+            throw new FileImporterException(ex);
+        }
+    }
 }

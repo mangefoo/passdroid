@@ -50,19 +50,15 @@
                   
         <activity android:label="@string/change_password_title"
                   android:theme="@android:style/Theme.Dialog"        
-                  android:name=".ChangePasswordActivity">
-        </activity>
+                  android:name=".ChangePasswordActivity"/>
 
         <activity android:label="@string/file_export_title"
                   android:theme="@android:style/Theme.Dialog"        
-                  android:name=".FileExportActivity">
-        </activity>
+                  android:name=".FileExportActivity"/>
         
         <activity android:label="@string/file_import_title"
                   android:theme="@android:style/Theme.Dialog"        
-                  android:name=".FileImportActivity">
-        </activity>
-
+                  android:name=".FileImportActivity"/>
                   
         <activity android:label="@string/generate_password_title"
                   android:theme="@android:style/Theme.Dialog"
@@ -72,6 +68,9 @@
                   android:theme="@android:style/Theme.Dialog"
                   android:name=".DisplayPasswordActivity"/>
         
+        <activity android:label="@string/import_password_title"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:name=".ImportPasswordActivity"/>
                          
     </application>
     <uses-sdk android:minSdkVersion="3" />

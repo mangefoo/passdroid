@@ -75,6 +75,9 @@ and press OK.</string>
 
 <string name="file_export_title">Export passwords to file</string>
 <string name="file_import_title">Import passwords from file</string>
+<string name="encrypt_export">Encrypt the exported file</string>
+<string name="export_successful">Database successfully exported to %s</string>
+<string name="export_cleartext_successful">Database successfully exported to %s. Note that the passwords are NOT ENCRYPTED.</string>
 
 <string name="export_description">\
 This will export the password database to a file on your phone or SD card. \
@@ -90,6 +93,9 @@ The import will remove any existing passwords on this device.</string>
 <string name="import_description_file_present" formatted="false">\
 The file %f contains %n entries.</string>
 
+<string name="import_description_encrypted_file_present" formatted="false">\
+The file %s is encrypted.</string>
+
 <string name="import_description_file_missing">\
 Import not available. To enable it copy your exported password file to\n
 <b>%f</b>.</string>
@@ -97,5 +103,17 @@ Import not available. To enable it copy your exported password file to\n
 <string name="import_description_failure" formatted="false">Failed to read %f: %e.</string>
 
 <string name="generate_password_title">Generate password</string>
+
+<!-- Import passwords dialog -->
+<string name="import_password_title">Import password</string>
+<string name="import_password_desc">The file could not be decrypted using the current master password. Please enter the master password that was in use when you exported the password database.</string>
+<string name="import_failed">Import failed.</string>
+
+<!-- Generics -->
+<string name="yes">Yes</string>
+<string name="no">No</string>
+<string name="ok">OK</string>
+<string name="success">Success</string>
+<string name="failure">Failure</string>
 
 </resources>

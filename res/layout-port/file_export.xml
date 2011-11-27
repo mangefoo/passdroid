@@ -44,6 +44,12 @@
 		      android:layout_width="fill_parent"
 		      android:layout_height="wrap_content"
 		      android:layout_weight="10"/>
+		     
+        <CheckBox android:id="@+id/encrypt_export"
+                  android:text="@string/encrypt_export"
+                  android:checked="true"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"/>
   </LinearLayout>
 		      
   <LinearLayout
