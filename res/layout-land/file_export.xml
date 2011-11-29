@@ -60,6 +60,7 @@
 
         <CheckBox android:id="@+id/encrypt_export"
                   android:layout_marginLeft="10dip"
+                  android:text=""
                   android:checked="true"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"/>
