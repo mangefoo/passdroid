@@ -20,6 +20,8 @@
 package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
+import com.kodholken.passdroid.db.DbMigration;
+import com.kodholken.passdroid.db.SystemData;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -155,7 +157,7 @@ public class LoginActivity extends Activity {
         String appVersion = Utils.getVersion(this);
 
         if (!dbVersion.equals(appVersion)) {
-            if (DBMigration.postLoginMigration(this, dbVersion, appVersion)) {
+            if (DbMigration.postLoginMigration(this, dbVersion, appVersion)) {
                 Utils.debug("Setting version to " + appVersion);
                 system.updateVersion(appVersion);
             }

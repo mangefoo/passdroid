@@ -17,7 +17,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.kodholken.passdroid;
+package com.kodholken.passdroid.db;
+
+import com.kodholken.passdroid.Crypto;
+import com.kodholken.passdroid.PasswordEntry;
+import com.kodholken.passdroid.Session;
+import com.kodholken.passdroid.Utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,7 +30,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
-public class DBMigration {
+public class DbMigration {
     public static boolean preLoginMigration(Context context, String oldVersion, String newVersion) {
         return true;
     }

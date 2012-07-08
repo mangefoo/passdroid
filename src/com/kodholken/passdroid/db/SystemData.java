@@ -17,7 +17,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.kodholken.passdroid;
+package com.kodholken.passdroid.db;
+
+import com.kodholken.passdroid.Constants;
 
 import android.content.ContentValues;
 import android.content.Context;

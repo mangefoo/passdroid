@@ -19,6 +19,9 @@
 
 package com.kodholken.passdroid;
 
+import com.kodholken.passdroid.db.DbMigration;
+import com.kodholken.passdroid.db.SystemData;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -80,7 +83,7 @@ public class MainActivity extends Activity {
         	// called when the user has logged in.
         	// @see LoginActivity#handleVersionChange
         	if (!dbVersion.equals(appVersion)) {
-        		DBMigration.preLoginMigration(this, dbVersion, appVersion);
+        		DbMigration.preLoginMigration(this, dbVersion, appVersion);
         	}
     	}
 

@@ -1,5 +1,5 @@
 /*    
-    This file is part of the Passdroid password management software.
+g    This file is part of the Passdroid password management software.
     
     Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 

@@ -22,6 +22,8 @@ package com.kodholken.passdroid;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.kodholken.passdroid.db.PasswordData;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

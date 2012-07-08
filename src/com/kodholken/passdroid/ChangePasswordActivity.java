@@ -21,6 +21,8 @@ package com.kodholken.passdroid;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.kodholken.passdroid.R;
+import com.kodholken.passdroid.db.DbMigration;
+import com.kodholken.passdroid.db.SystemData;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -86,7 +88,7 @@ public class ChangePasswordActivity extends SherlockActivity {
             return;
         }
 
-        if (DBMigration.changePassword(this, oldPassword, newPassword1)) {
+        if (DbMigration.changePassword(this, oldPassword, newPassword1)) {
             Session.getInstance().setKey(Crypto.hmacFromPassword(newPassword1));
 
             AlertDialog alertDialog;
