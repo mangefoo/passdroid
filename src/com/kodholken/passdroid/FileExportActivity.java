@@ -1,7 +1,7 @@
 /*
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2011  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,18 +19,19 @@
 
 package com.kodholken.passdroid;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class FileExportActivity extends TimeoutActivity {
+public class FileExportActivity extends SherlockActivity {
     private Button cancelButton;
     private Button exportButton;
     private CheckBox encryptFileCheckbox;
@@ -40,7 +41,6 @@ public class FileExportActivity extends TimeoutActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.file_export);
 
         exportFilename = (EditText) this.findViewById(R.id.filename);

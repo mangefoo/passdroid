@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
-    
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,15 +15,10 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package com.kodholken.passdroid;
 
 public class Base64Exception extends Exception {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
+    private static final long serialVersionUID = 1L;
 }

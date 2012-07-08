@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ package com.kodholken.passdroid;
 
 import java.io.File;
 
+import com.actionbarsherlock.app.SherlockActivity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,12 +30,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FileImportActivity extends TimeoutActivity {
+public class FileImportActivity extends SherlockActivity {
     private Button cancelButton;
     private Button importButton;
     private TextView importDesc2;
@@ -49,7 +50,6 @@ public class FileImportActivity extends TimeoutActivity {
         importFile = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/passdroid_db.xml";
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.file_import);
 
         cancelButton = (Button) this.findViewById(R.id.cancel_button);
@@ -69,7 +69,7 @@ public class FileImportActivity extends TimeoutActivity {
                     getString(R.string.import_description_file_missing),
                     importFile, 0, "");
             importDesc2.setText(desc2);
-            importDesc2.setTextColor(Color.rgb(255, 150, 150));
+            importDesc2.setTextColor(Color.rgb(255, 50, 50));
         } else {
             fileImporter = new FileImporter(importFile, Utils.getVersion(this));
             
@@ -207,7 +207,7 @@ public class FileImportActivity extends TimeoutActivity {
     private String formatString(String template, String file, int nFiles,
             String error) {
         return template.replaceAll("%f", file)
-                .replaceAll("%n", new Integer(nFiles).toString())
+                .replaceAll("%n", Integer.valueOf(nFiles).toString())
                 .replaceAll("%e", error);
     }
 }

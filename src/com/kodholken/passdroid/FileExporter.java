@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2011  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

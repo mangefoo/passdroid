@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,102 +28,102 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class SystemData extends SQLiteOpenHelper {
 
-	public SystemData(Context ctx) {
-		super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
-	}
-	
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE system (id INTEGER PRIMARY KEY AUTOINCREMENT, attribute TEXT NOT NULL, value TEXT)");
-	}
+    public SystemData(Context ctx) {
+        super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
+    }
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS system");
-		onCreate(db);
-	}
-	
-	public void verifyTable() {
-		SQLiteDatabase db = getReadableDatabase();
-		try {
-			db.rawQuery("SELECT * FROM system", null);
-		} catch (SQLException ex) {
-			onCreate(db);
-		}
-		db.close();
-	}
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE system (id INTEGER PRIMARY KEY AUTOINCREMENT, attribute TEXT NOT NULL, value TEXT)");
+    }
 
-	public boolean hasAttribute(String attr) {
-		boolean result = false;
-		
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor cur = db.rawQuery("SELECT count(*) FROM system WHERE attribute = ?", new String[] { attr });
-		if (cur.moveToNext()) {
-			result = cur.getInt(0) > 0;
-		}
-		cur.close();
-		db.close();
-		
-		return result;
-	}
-	
-	public boolean hasKey() {
-		return hasAttribute("key");
-	}
-	
-	public boolean hasVersion() {
-		return hasAttribute("version");
-	}
-	
-	public String getAttribute(String attr) {
-		String result = null;
-		
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor cur = db.rawQuery("SELECT value FROM system WHERE attribute=?", new String[] { attr });
-		if (cur.moveToNext()) {
-			result = cur.getString(0);
-		}
-		cur.close();
-		db.close();
-		
-		return result;
-	}
-	
-	public String getKey() {
-		return getAttribute("key");
-	}
-	
-	public String getVersion() {
-		return getAttribute("version");
-	}
-	
-	public void setAttribute(String attr, String value) {
-		SQLiteDatabase db = getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put("attribute", attr);
-		values.put("value", value);
-		db.insertOrThrow("system", null, values);
-		db.close();
-	}
-	
-	public void updateAttribute(String attr, String value) {
-		SQLiteDatabase db = getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put("value", value);
-		String [] whereArgs = { attr };
-		db.update("system", values, "attribute=?", whereArgs);
-		db.close();		
-	}
-	
-	public void setKey(String value) {
-		setAttribute("key", value);
-	}
-	
-	public void setVersion(String value) {
-		setAttribute("version", value);	
-	}
-	
-	public void updateVersion(String value) {
-		updateAttribute("version", value);
-	}
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS system");
+        onCreate(db);
+    }
+
+    public void verifyTable() {
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            db.rawQuery("SELECT * FROM system", null);
+        } catch (SQLException ex) {
+            onCreate(db);
+        }
+        db.close();
+    }
+
+    public boolean hasAttribute(String attr) {
+        boolean result = false;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.rawQuery("SELECT count(*) FROM system WHERE attribute = ?", new String[] { attr });
+        if (cur.moveToNext()) {
+            result = cur.getInt(0) > 0;
+        }
+        cur.close();
+        db.close();
+
+        return result;
+    }
+
+    public boolean hasKey() {
+        return hasAttribute("key");
+    }
+
+    public boolean hasVersion() {
+        return hasAttribute("version");
+    }
+
+    public String getAttribute(String attr) {
+        String result = null;
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cur = db.rawQuery("SELECT value FROM system WHERE attribute=?", new String[] { attr });
+        if (cur.moveToNext()) {
+            result = cur.getString(0);
+        }
+        cur.close();
+        db.close();
+
+        return result;
+    }
+
+    public String getKey() {
+        return getAttribute("key");
+    }
+
+    public String getVersion() {
+        return getAttribute("version");
+    }
+
+    public void setAttribute(String attr, String value) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("attribute", attr);
+        values.put("value", value);
+        db.insertOrThrow("system", null, values);
+        db.close();
+    }
+
+    public void updateAttribute(String attr, String value) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("value", value);
+        String [] whereArgs = { attr };
+        db.update("system", values, "attribute=?", whereArgs);
+        db.close();		
+    }
+
+    public void setKey(String value) {
+        setAttribute("key", value);
+    }
+
+    public void setVersion(String value) {
+        setAttribute("version", value);	
+    }
+
+    public void updateVersion(String value) {
+        updateAttribute("version", value);
+    }
 }

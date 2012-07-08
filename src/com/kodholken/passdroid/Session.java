@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,79 +24,79 @@ package com.kodholken.passdroid;
  * the application.
  */
 public class Session {
-	private byte [] key;         // Key derived from the master password. It is
-	                             // used for all encryption and decryption of 
-	                             // the user stored data.
+    private byte [] key;         // Key derived from the master password. It is
+    // used for all encryption and decryption of 
+    // the user stored data.
     private boolean isLoggedIn;  // Indicates whether the user is currently
-                                 // logged in.
-		
-	private boolean needReload;
-	
-	private boolean exitMain;  // Indicates whether the MainActivity should 
-	                           // exit when it receives control (onResume)
+    // logged in.
 
-	private static Session session;  // Singleton instance of this class
-	
-	private Session() {
-		needReload = false;
-		isLoggedIn = false;
-		exitMain = false;
-	}
-	
-	public static Session getInstance() {
-		if (session == null) {
-			session = new Session();
-		}
-			
-		return session;
-	}
-	
-	public void setKey(byte [] key) {
-		this.key = key;
-	}
+    private boolean needReload;
 
-	public byte[] getKey() {
-		return key;
-	}
-	
-	public boolean isLoggedIn() {
-		return isLoggedIn;
-	}
-	
-	public void setLoggedIn(boolean isLoggedIn) {
-		this.isLoggedIn = isLoggedIn;
-	}
-	
-	public void setLoggedIn() {
-		setLoggedIn(true);
-	}
-	
-	public void logout() {		
-		if (!isLoggedIn) {
-			return ;
-		}
-		
-		for (int i = 0; i < key.length; i++) {
-			key[i] = 0;
-		}
-		
-		key = null;
-		setLoggedIn(false);
-	}
-		
-	public void setNeedReload(boolean needReload) {
-		this.needReload = needReload;
-	}
-	
-	public boolean needReload() {
-		return needReload;
-	}
-	
-	public void setExitMain(boolean exitMain) {
-		this.exitMain = exitMain;
-	}
-	
-	public boolean getExitMain() {
-		return exitMain;
-	}
+    private boolean exitMain;  // Indicates whether the MainActivity should 
+    // exit when it receives control (onResume)
+
+    private static Session session;  // Singleton instance of this class
+
+    private Session() {
+        needReload = false;
+        isLoggedIn = false;
+        exitMain = false;
+    }
+
+    public static Session getInstance() {
+        if (session == null) {
+            session = new Session();
+        }
+
+        return session;
+    }
+
+    public void setKey(byte [] key) {
+        this.key = key;
+    }
+
+    public byte[] getKey() {
+        return key;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean isLoggedIn) {
+        this.isLoggedIn = isLoggedIn;
+    }
+
+    public void setLoggedIn() {
+        setLoggedIn(true);
+    }
+
+    public void logout() {		
+        if (!isLoggedIn) {
+            return ;
+        }
+
+        for (int i = 0; i < key.length; i++) {
+            key[i] = 0;
+        }
+
+        key = null;
+        setLoggedIn(false);
+    }
+
+    public void setNeedReload(boolean needReload) {
+        this.needReload = needReload;
+    }
+
+    public boolean needReload() {
+        return needReload;
+    }
+
+    public void setExitMain(boolean exitMain) {
+        this.exitMain = exitMain;
+    }
+
+    public boolean getExitMain() {
+        return exitMain;
+    }
 }

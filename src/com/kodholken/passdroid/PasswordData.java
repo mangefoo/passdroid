@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,29 +25,29 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class PasswordData extends SQLiteOpenHelper {	
-	public PasswordData(Context ctx) {
-		super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
-	}
-	
-	@Override
-	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-				   "system TEXT NOT NULL, username TEXT, password TEXT)");
-	}
+    public PasswordData(Context ctx) {
+        super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
+    }
 
-	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS data");
-		onCreate(db);
-	}
-	
-	public void verifyTable() {
-		SQLiteDatabase db = getReadableDatabase();
-		try {
-			db.rawQuery("SELECT * FROM data", null);
-		} catch (SQLException ex) {
-			onCreate(db);
-		}
-		db.close();
-	}
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL("CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        "system TEXT NOT NULL, username TEXT, password TEXT)");
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS data");
+        onCreate(db);
+    }
+
+    public void verifyTable() {
+        SQLiteDatabase db = getReadableDatabase();
+        try {
+            db.rawQuery("SELECT * FROM data", null);
+        } catch (SQLException ex) {
+            onCreate(db);
+        }
+        db.close();
+    }
 }

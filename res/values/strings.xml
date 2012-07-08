@@ -8,6 +8,8 @@
 <string name="show_title">Show</string>
 <string name="edit_title">Edit Password</string>
 
+<string name="logo_description">Passdroid logo</string>
+
 <!-- About -->
 <string name="about_title">About Passdroid</string>
 <string name="about_text">\
@@ -17,7 +19,7 @@ to prevent access without the master password.\n\
 \n\
 http://passdroid.kodholken.com/\n\
 \n\
-Copyright &#169; 2009-2011  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
+Copyright &#169; 2009-2012  Magnus Eriksson &lt;eriksson.mag@gmail.com&gt;. All rights reserved.\n\
 \n\
 Application icon by VisualPharm (http://www.visualpharm.com/).\n\
 \n\
@@ -73,8 +75,8 @@ and press OK.</string>
 
 <string name="settings_title">Settings</string>
 
-<string name="file_export_title">Export passwords to file</string>
-<string name="file_import_title">Import passwords from file</string>
+<string name="file_export_title">Export to file</string>
+<string name="file_import_title">Import from file</string>
 <string name="encrypt_export">Encrypt the exported file</string>
 <string name="export_successful">Database successfully exported to %s</string>
 <string name="export_cleartext_successful">Database successfully exported to %s. Note that the passwords are NOT ENCRYPTED.</string>
@@ -83,8 +85,9 @@ and press OK.</string>
 This will export the password database to a file on your phone or SD card. \
 In combination with the import function this can be used to move the \
 password database between Passdroid devices or as a way to back up your data. \
-Please note that the data in the export files is stored unencrypted so make sure it is \
-removed from the phone as quickly as possible and stored securely.</string>
+If you export the file unencrypted make sure it is \
+removed from the phone as quickly as possible since other applications will \
+be able to read it.</string>
 
 <string name="import_description">\
 This will import a database of passwords that has been exported from Passdroid. \

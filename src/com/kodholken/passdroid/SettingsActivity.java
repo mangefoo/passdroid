@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,37 +27,20 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.settings);
-				
-		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-		updateSummaries();
-	}
-	
-	@Override
-	protected void onResume() {
-		TimeoutHandler.gotResume();
-		super.onResume();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.settings);
 
-		if (TimeoutHandler.hasTimedOut(this)) {
-			Session.getInstance().setLoggedIn(false);
-			finish();
-		}
-	}
-	
-	@Override
-	protected void onPause() {
-		TimeoutHandler.gotPause();
-		super.onPause();
-	}
-	
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		updateSummaries();
-		Session.getInstance().setNeedReload(true);
-	}
-	
-	public void updateSummaries() {}
+        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        updateSummaries();
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        updateSummaries();
+        Session.getInstance().setNeedReload(true);
+    }
+
+    public void updateSummaries() {}
 }

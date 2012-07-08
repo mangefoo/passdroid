@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 package com.kodholken.passdroid;
 
 public interface IdleLogoutCallback {
-	public void idleLogoutCallback();
-	public void idleLogoutCountdown(int left);
-	public void idleLogoutCancel();
+    public void idleLogoutCallback();
+    public void idleLogoutCountdown(int left);
+    public void idleLogoutCancel();
 }

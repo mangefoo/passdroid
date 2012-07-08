@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2010  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 package com.kodholken.passdroid;
 
 public class Constants {
-	public static final boolean DEBUG = false;
-	public static final String  DBNAME = "password.db";
-	public static final int     DBVERSION = 1;
-	
-	public static final boolean CLEARDB = false;
+    public static final boolean DEBUG = false;
+    public static final String  DBNAME = "password.db";
+    public static final int     DBVERSION = 1;
+
+    public static final boolean CLEARDB = false;
 }

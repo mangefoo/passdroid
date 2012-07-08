@@ -1,7 +1,7 @@
 /*    
     This file is part of the Passdroid password management software.
     
-    Copyright (C) 2009-2011  Magnus Eriksson <eriksson.mag@gmail.com>
+    Copyright (C) 2009-2012  Magnus Eriksson <eriksson.mag@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,230 +44,230 @@ import org.xml.sax.SAXException;
 import android.util.Log;
 
 public class FileImporter {
-	private String filename;
-	private String appVersion;
-	private PasswordEntry[] passwordEntries;
-	
-	public FileImporter(String filename, String appVersion) {
-		this.filename = filename;
-		this.appVersion = appVersion;
-	}
-	
-	public void parse() throws FileImporterException {
-	    try {
-	        parse(createInputStream());
-	    } catch (IOException ex) {
-	        throw new FileImporterException(ex);
-	    }
-	}
-	
-	public void parse(InputStream input) throws FileImporterException {
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	    try {
-	        DocumentBuilder builder = factory.newDocumentBuilder();
-	        Document doc = builder.parse(input);
-	        Element root = doc.getDocumentElement();
-	        if (root == null || !root.getTagName().equals("passdroid")) {
-	            throw new FileImporterException("Invalid file format: " + (root == null ? "<empty>" : root.getTagName()));
-	        }
+    private String filename;
+    private String appVersion;
+    private PasswordEntry[] passwordEntries;
 
-	        Node versionNode = root.getAttributes().getNamedItem("version");
-	        if (versionNode == null) {
-	            throw new FileImporterException("Missing version attribute on passdroid tag");
-	        }
-	        String version = versionNode.getNodeValue();
-	        Log.d(FileImporter.class.getName(), "Import file version: " + version);
-	        parseImportFile(version, root);
-	    } catch (ParserConfigurationException ex) {
-	        throw new FileImporterException(ex);
-	    } catch (IOException ex) {
-	        throw new FileImporterException(ex);
-	    } catch (SAXException ex) {
-	        throw new FileImporterException(ex);
-	    }
-	}
-	
-	public boolean isEncrypted() throws FileImporterException {
-	    InputStream is = null;
+    public FileImporter(String filename, String appVersion) {
+        this.filename = filename;
+        this.appVersion = appVersion;
+    }
 
-	    try {
-	        byte [] sig = new byte[3];
-                is = new FileInputStream(new File(filename));
-                if (is.read(sig) != 3) {
-                    throw new FileImporterException("Could not read signature");
-                }
+    public void parse() throws FileImporterException {
+        try {
+            parse(createInputStream());
+        } catch (IOException ex) {
+            throw new FileImporterException(ex);
+        }
+    }
 
-                if (sig[0] != 's' || sig[1] != 'q' || sig[2] != 't') {
-                    return false;
-                }
-            } catch (Exception e) {
-                throw new FileImporterException(e.getMessage());
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (IOException e) {}
+    public void parse(InputStream input) throws FileImporterException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(input);
+            Element root = doc.getDocumentElement();
+            if (root == null || !root.getTagName().equals("passdroid")) {
+                throw new FileImporterException("Invalid file format: " + (root == null ? "<empty>" : root.getTagName()));
+            }
+
+            Node versionNode = root.getAttributes().getNamedItem("version");
+            if (versionNode == null) {
+                throw new FileImporterException("Missing version attribute on passdroid tag");
+            }
+            String version = versionNode.getNodeValue();
+            Log.d(FileImporter.class.getName(), "Import file version: " + version);
+            parseImportFile(version, root);
+        } catch (ParserConfigurationException ex) {
+            throw new FileImporterException(ex);
+        } catch (IOException ex) {
+            throw new FileImporterException(ex);
+        } catch (SAXException ex) {
+            throw new FileImporterException(ex);
+        }
+    }
+
+    public boolean isEncrypted() throws FileImporterException {
+        InputStream is = null;
+
+        try {
+            byte [] sig = new byte[3];
+            is = new FileInputStream(new File(filename));
+            if (is.read(sig) != 3) {
+                throw new FileImporterException("Could not read signature");
+            }
+
+            if (sig[0] != 's' || sig[1] != 'q' || sig[2] != 't') {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new FileImporterException(e.getMessage());
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {}
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Tries to extract the exported file version without any XML parsing. This
+     * is needed since the (invalid) exported files are sometimes not accepted
+     * by the SAX parser.
+     * 
+     * @return The extracted file version if it exists. Else null.
+     * 
+     * @throws IOException
+     */
+    private String getFileVersion() throws IOException {
+        String version = null;
+        FileInputStream fstream = new FileInputStream(filename);
+
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+        String s;
+        Pattern p = Pattern.compile(".*passdroid version=\\\"([0-9]+.[0-9]+)\\\".*");
+        while ((s = br.readLine()) != null) {
+            Matcher m = p.matcher(s);
+            if (m.matches()) {
+                version = m.group(1);
+                break;
+            }
+        }
+
+        br.close();
+        in.close();
+        fstream.close();
+
+        return version;
+    }
+
+    private InputStream createInputStream() throws IOException, FileImporterException {
+        String version = getFileVersion();
+
+        if (version == null) {
+            throw new FileImporterException("Unable to get exported file version");
+        }
+
+        Version fileVersion = Version.parse(version);
+        Version compVersion = new Version(1, 6);
+
+        if (fileVersion.compareTo(compVersion) > 0) {
+            // Version 1.7 or later is passed as a FileInputStream instance.
+            return new FileInputStream(filename);
+        }
+
+        /* 
+         * If the version is 1.6 or earlier we need to pass the exported file
+         * through a filter to escape some non-allowed characters so we 
+         * read the file to memory, escapes the non-allowed characters and
+         * creates a StringInputStream instance from the string.
+         */
+
+        FileInputStream fstream = new FileInputStream(filename);
+
+        DataInputStream in = new DataInputStream(fstream);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+
+        String s;
+        StringBuilder sb = new StringBuilder();
+        Pattern p = Pattern.compile("(.*)<system name=\\\"([^\"]+)\\\">.*");
+        while ((s = br.readLine()) != null) {
+            Matcher m = p.matcher(s);
+            if (m.matches()) {
+                sb.append(m.group(1) + "<system name=\"" + 
+                        Utils.escapeXMLChars(m.group(2)) + "\">\n");
+            } else {
+                sb.append(s + "\n");
+            }
+        }
+
+        br.close();
+        in.close();
+        fstream.close();
+
+        return new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
+    }
+
+    private void parseImportFile(String version, Node root) throws FileImporterException {
+        ImportFileParser parser = null;
+        Version fileVersion, appVersion;
+
+        try {
+            fileVersion = Version.parse(version);
+            appVersion = Version.parse(this.appVersion);
+        } catch (NumberFormatException ex) {
+            throw new FileImporterException(ex);
+        }
+
+        if (fileVersion.compareTo(appVersion) > 0) {
+            throw new FileImporterException("Import file version (" + 
+                    fileVersion + ") is larger than the app version (" +
+                    appVersion +")");
+        }
+
+        parser = new ImportFileParser_v_1_0();		
+        parser.parse(root);
+    }
+
+    public PasswordEntry [] getPasswordEntries() {
+        return passwordEntries;
+    }
+
+    private interface ImportFileParser {
+        void parse(Node root);
+    }
+
+    private class ImportFileParser_v_1_0 implements ImportFileParser {
+        public ImportFileParser_v_1_0() {}
+
+        @Override
+        public void parse(Node root) {
+            ArrayList<PasswordEntry> entries = new ArrayList<PasswordEntry>();
+
+            NodeList nodes = root.getChildNodes();
+            for (int i = 0; i < nodes.getLength(); i++) {
+                if (nodes.item(i).getNodeName().equals("system")) {
+                    PasswordEntry entry = parseSystemNode(nodes.item(i));
+                    entries.add(entry);
                 }
             }
 
-            return true;
-	}
-	
-	/**
-	 * Tries to extract the exported file version without any XML parsing. This
-	 * is needed since the (invalid) exported files are sometimes not accepted
-	 * by the SAX parser.
-	 * 
-	 * @return The extracted file version if it exists. Else null.
-	 * 
-	 * @throws IOException
-	 */
-	private String getFileVersion() throws IOException {
-		String version = null;
-		FileInputStream fstream = new FileInputStream(filename);
-		
-		DataInputStream in = new DataInputStream(fstream);
-	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	    
-	    String s;
-    	Pattern p = Pattern.compile(".*passdroid version=\\\"([0-9]+.[0-9]+)\\\".*");
-	    while ((s = br.readLine()) != null) {
-	    	Matcher m = p.matcher(s);
-	    	if (m.matches()) {
-	    		version = m.group(1);
-	    		break;
-	    	}
-	    }
-	    
-	    br.close();
-	    in.close();
-	    fstream.close();
-	    
-	    return version;
-	}
-	
-	private InputStream createInputStream() throws IOException, FileImporterException {
-		String version = getFileVersion();
-		
-		if (version == null) {
-			throw new FileImporterException("Unable to get exported file version");
-		}
-		
-		Version fileVersion = Version.parse(version);
-		Version compVersion = new Version(1, 6);
-		
-		if (fileVersion.compareTo(compVersion) > 0) {
-			// Version 1.7 or later is passed as a FileInputStream instance.
-			return new FileInputStream(filename);
-		}
-		
-		/* 
-		 * If the version is 1.6 or earlier we need to pass the exported file
-		 * through a filter to escape some non-allowed characters so we 
-		 * read the file to memory, escapes the non-allowed characters and
-		 * creates a StringInputStream instance from the string.
-		 */
+            passwordEntries = entries.toArray(new PasswordEntry [entries.size()]);
+        }
 
-		FileInputStream fstream = new FileInputStream(filename);
-		
-	    DataInputStream in = new DataInputStream(fstream);
-	    BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	    
-	    String s;
-	    StringBuilder sb = new StringBuilder();
-	    Pattern p = Pattern.compile("(.*)<system name=\\\"([^\"]+)\\\">.*");
-	    while ((s = br.readLine()) != null) {
-	    	Matcher m = p.matcher(s);
-	    	if (m.matches()) {
-	    		sb.append(m.group(1) + "<system name=\"" + 
-	    				  Utils.escapeXMLChars(m.group(2)) + "\">\n");
-	    	} else {
-	    		sb.append(s + "\n");
-	    	}
-	    }
-	    
-	    br.close();
-	    in.close();
-	    fstream.close();
-	    
-	    return new ByteArrayInputStream(sb.toString().getBytes("UTF-8"));
-	}
-		
-	private void parseImportFile(String version, Node root) throws FileImporterException {
-		ImportFileParser parser = null;
-		Version fileVersion, appVersion;
-		
-		try {
-			fileVersion = Version.parse(version);
-			appVersion = Version.parse(this.appVersion);
-		} catch (NumberFormatException ex) {
-			throw new FileImporterException(ex);
-		}
-		
-		if (fileVersion.compareTo(appVersion) > 0) {
-			throw new FileImporterException("Import file version (" + 
-					fileVersion + ") is larger than the app version (" +
-					appVersion +")");
-		}
-		
-		parser = new ImportFileParser_v_1_0();		
-		parser.parse(root);
-	}
-	
-	public PasswordEntry [] getPasswordEntries() {
-		return passwordEntries;
-	}
-	
-	private interface ImportFileParser {
-		void parse(Node root);
-	}
-	
-	private class ImportFileParser_v_1_0 implements ImportFileParser {
-		public ImportFileParser_v_1_0() {}
+        private PasswordEntry parseSystemNode(Node system) {
+            String name  = system.getAttributes().getNamedItem("name").getNodeValue();
+            String username = "";
+            String password = "";
 
-		@Override
-		public void parse(Node root) {
-			ArrayList<PasswordEntry> entries = new ArrayList<PasswordEntry>();
-			
-			NodeList nodes = root.getChildNodes();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				if (nodes.item(i).getNodeName().equals("system")) {
-					PasswordEntry entry = parseSystemNode(nodes.item(i));
-					entries.add(entry);
-				}
-			}
-			
-			passwordEntries = entries.toArray(new PasswordEntry [entries.size()]);
-		}
-		
-		private PasswordEntry parseSystemNode(Node system) {
-			String name  = system.getAttributes().getNamedItem("name").getNodeValue();
-			String username = "";
-			String password = "";
-			
-			NodeList nodes = system.getChildNodes();
-			
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node.getNodeName().equals("username")) {
-					if (node.getFirstChild() != null) {
-						username = node.getFirstChild().getNodeValue();
-					}
-				} else if (node.getNodeName().equals("password")) {
-					if (node.getFirstChild() != null) {
-						password = node.getFirstChild().getNodeValue();
-					}
-				}
-			}
-			
-			PasswordEntry entry = new PasswordEntry();
-			entry.setDecSystem(name);
-			entry.setDecUsername(username);
-			entry.setDecPassword(password);
+            NodeList nodes = system.getChildNodes();
 
-			return entry;
-		}
-	}
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
+                if (node.getNodeName().equals("username")) {
+                    if (node.getFirstChild() != null) {
+                        username = node.getFirstChild().getNodeValue();
+                    }
+                } else if (node.getNodeName().equals("password")) {
+                    if (node.getFirstChild() != null) {
+                        password = node.getFirstChild().getNodeValue();
+                    }
+                }
+            }
+
+            PasswordEntry entry = new PasswordEntry();
+            entry.setDecSystem(name);
+            entry.setDecUsername(username);
+            entry.setDecPassword(password);
+
+            return entry;
+        }
+    }
 
     public void parseEncrypted(byte[] key) throws FileImporterException {
         try {
@@ -306,7 +306,7 @@ public class FileImporter {
             if (decrypted == null) {
                 throw new FileImporterException("Decryption failed");
             }
-            
+
             InputStream is = new ByteArrayInputStream(decrypted, 2 /* Skip salt */, decrypted.length - 1);
             parse(is);
         } catch (IOException ex) {
