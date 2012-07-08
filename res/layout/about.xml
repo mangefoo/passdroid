@@ -32,6 +32,7 @@
             android:layout_alignRight="@+d/dummy"
             android:layout_alignWithParentIfMissing="true"
             android:gravity="right"
+            android:background="#000000"
             android:src="@drawable/safe_icon_large" />
     </RelativeLayout>
 
