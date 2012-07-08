@@ -241,6 +241,7 @@ PasswordModelListener {
 
         listPosition = list.getFirstVisiblePosition();
 
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(i);
     }
 

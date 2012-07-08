@@ -58,7 +58,6 @@ public class ShowActivity extends SherlockActivity {
 
         this.setContentView(R.layout.show);
 
-        ((TextView) findViewById(R.id.system)).setText(system);
         TextView usernameView = (TextView) findViewById(R.id.username);
         TextView usernameHeaderView = (TextView) findViewById(R.id.username);
 
@@ -72,6 +71,8 @@ public class ShowActivity extends SherlockActivity {
         ((TextView) findViewById(R.id.password)).setText(password);
 
         setupClipboardAction();
+        
+        getSupportActionBar().setTitle(system);
     }
     
     @Override
@@ -181,5 +182,11 @@ public class ShowActivity extends SherlockActivity {
         db.close();
 
         finish();
+    }
+    
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
     }
 }
