@@ -26,11 +26,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 
-public class SettingsActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+public class ImportExportActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(R.xml.import_export);
 
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         updateSummaries();

@@ -22,24 +22,12 @@
   android:defaultValue="true"
   android:summary="Show the username in addition to the system in the list of passwords."/>
   
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<Preference
+  android:key="import_export"
   android:title="Import / Export">
-  <Preference
-    android:key="file_export"
-    android:title="@string/file_export_title">
 
-    <intent android:targetPackage="com.kodholken.passdroid"
-            android:targetClass="com.kodholken.passdroid.FileExportActivity"/>
-  </Preference>
-  
-  <Preference
-    android:key="file_import"
-    android:title="@string/file_import_title">
-
-    <intent android:targetPackage="com.kodholken.passdroid"
-            android:targetClass="com.kodholken.passdroid.FileImportActivity"/>
-  </Preference>
-</PreferenceScreen>
+   <intent android:targetPackage="com.kodholken.passdroid"
+           android:targetClass="com.kodholken.passdroid.ImportExportActivity"/>
+</Preference>  
   
 </PreferenceScreen>

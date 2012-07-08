@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:title="Import / Export">
+   
+  <Preference
+    android:key="file_export"
+    android:title="@string/file_export_title">
+
+    <intent android:targetPackage="com.kodholken.passdroid"
+            android:targetClass="com.kodholken.passdroid.FileExportActivity"/>
+  </Preference>
+  
+  <Preference
+    android:key="file_import"
+    android:title="@string/file_import_title">
+
+    <intent android:targetPackage="com.kodholken.passdroid"
+            android:targetClass="com.kodholken.passdroid.FileImportActivity"/>
+  </Preference>
+  
+</PreferenceScreen>

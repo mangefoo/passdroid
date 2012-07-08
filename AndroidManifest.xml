@@ -48,10 +48,13 @@
                   
         <activity android:label="@string/settings_title"
                   android:name=".SettingsActivity"/>
-                  
+
         <activity android:label="@string/change_password_title"      
                   android:name=".ChangePasswordActivity"/>
 
+        <activity android:label="@string/import_export_title"
+                  android:name=".ImportExportActivity"/>
+                
         <activity android:label="@string/file_export_title"        
                   android:name=".FileExportActivity"/>
         

@@ -75,6 +75,7 @@ and press OK.</string>
 
 <string name="settings_title">Settings</string>
 
+<string name="import_export_title">Import / Export</string>
 <string name="file_export_title">Export to file</string>
 <string name="file_import_title">Import from file</string>
 <string name="encrypt_export">Encrypt the exported file</string>
