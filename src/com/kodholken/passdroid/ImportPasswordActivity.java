@@ -28,7 +28,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 
-public class ImportPasswordActivity extends SherlockActivity {
+public class ImportPasswordActivity extends SherlockTimeoutActivity {
     private EditText password;
 
     @Override

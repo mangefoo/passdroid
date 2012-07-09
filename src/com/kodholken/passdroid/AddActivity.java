@@ -19,7 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.kodholken.passdroid.R;
@@ -38,7 +37,7 @@ import android.widget.EditText;
 /**
  * Activity for adding new passwords.
  */
-public class AddActivity extends SherlockActivity {
+public class AddActivity extends SherlockTimeoutActivity {
     private Button saveButton;
     private Button generateButton;
     private EditText password;

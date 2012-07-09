@@ -36,7 +36,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class EditActivity extends SherlockActivity {
+public class EditActivity extends SherlockTimeoutActivity {
     private Button saveButton;
     private Button generateButton;
     private EditText password;

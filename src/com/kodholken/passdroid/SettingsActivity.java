@@ -19,14 +19,14 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.kodholken.passdroid.R;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 
-public class SettingsActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+public class SettingsActivity extends SherlockTimeoutPreferenceActivity
+                              implements OnSharedPreferenceChangeListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

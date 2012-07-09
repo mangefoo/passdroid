@@ -31,7 +31,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class FileExportActivity extends SherlockActivity {
+public class FileExportActivity extends SherlockTimeoutActivity {
     private Button cancelButton;
     private Button exportButton;
     private CheckBox encryptFileCheckbox;

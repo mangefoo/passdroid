@@ -19,11 +19,19 @@
 
 package com.kodholken.passdroid;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.SystemClock;
+
 /**
  * Singleton class for keeping application state accessible to all classes of
  * the application.
  */
 public class Session {
+    public static final String TIMEOUT_ACTION = "com.kodholken.passdroid.TIMEOUT";
+
     private byte [] key;         // Key derived from the master password. It is
     // used for all encryption and decryption of 
     // the user stored data.
@@ -36,11 +44,14 @@ public class Session {
     // exit when it receives control (onResume)
 
     private static Session session;  // Singleton instance of this class
+    
+    private PendingIntent timeoutIntent;
 
     private Session() {
         needReload = false;
         isLoggedIn = false;
         exitMain = false;
+        timeoutIntent = null;
     }
 
     public static Session getInstance() {
@@ -98,5 +109,32 @@ public class Session {
 
     public boolean getExitMain() {
         return exitMain;
+    }
+
+    public static void setTimeoutTimer(Context context) {
+        Session session = getInstance();
+
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (session.timeoutIntent != null) {
+            am.cancel(session.timeoutIntent);
+            session.timeoutIntent = null;
+            System.out.println("Old timeout cancelled");
+        }
+        
+        session.timeoutIntent = PendingIntent.getBroadcast(context, 0, new Intent(TIMEOUT_ACTION), PendingIntent.FLAG_ONE_SHOT);
+        am.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, session.timeoutIntent);
+        
+        System.out.println("Timeout alarm set");
+    }
+
+    public static void clearTimeoutTimer(Context context) {
+        Session session = getInstance();
+        
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (session.timeoutIntent != null) {
+            am.cancel(session.timeoutIntent);
+            session.timeoutIntent = null;
+            System.out.println("Timeout cancelled");
+        }
     }
 }

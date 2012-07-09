@@ -34,7 +34,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class FileImportActivity extends SherlockActivity {
+public class FileImportActivity extends SherlockTimeoutActivity {
     private Button cancelButton;
     private Button importButton;
     private TextView importDesc2;

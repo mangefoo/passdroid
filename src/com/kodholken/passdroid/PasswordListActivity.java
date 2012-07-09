@@ -20,7 +20,6 @@
 package com.kodholken.passdroid;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.kodholken.passdroid.db.PasswordData;
@@ -48,7 +47,7 @@ import android.widget.TextView;
 /**
  * Activity that displays the user passwords.
  */
-public class PasswordListActivity extends SherlockListActivity
+public class PasswordListActivity extends SherlockTimeoutListActivity
 implements IdleLogoutCallback,
 PasswordModelListener {
     private static final int OPTION_MENU_ADD      = 1;

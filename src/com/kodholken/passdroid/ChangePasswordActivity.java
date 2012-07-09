@@ -32,7 +32,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class ChangePasswordActivity extends SherlockActivity {
+public class ChangePasswordActivity extends SherlockTimeoutActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

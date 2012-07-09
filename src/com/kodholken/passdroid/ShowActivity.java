@@ -19,7 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.kodholken.passdroid.R;
@@ -40,7 +39,7 @@ import android.widget.TextView;
  * Activity that displays a password entry and let the user choose to edit or
  * delete the entry.
  */
-public class ShowActivity extends SherlockActivity {	
+public class ShowActivity extends SherlockTimeoutActivity {	
     private long passwordId;
     private String system;
     private String username;

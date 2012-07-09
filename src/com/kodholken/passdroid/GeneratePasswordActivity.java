@@ -44,7 +44,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-public class GeneratePasswordActivity extends Activity {
+public class GeneratePasswordActivity extends TimeoutActivity {
     private static final String passwordLengthKey = "passwordLength";
     private static final String passwordCharsetKey = "passwordCharset";
     private static final String numericCharset = "0123456789";

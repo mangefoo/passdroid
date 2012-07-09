@@ -20,7 +20,6 @@
 package com.kodholken.passdroid.db;
 
 import com.kodholken.passdroid.Constants;
-import com.kodholken.passdroid.Utils;
 
 import android.content.Context;
 import android.database.SQLException;

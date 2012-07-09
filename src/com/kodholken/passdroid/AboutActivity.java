@@ -21,12 +21,11 @@ package com.kodholken.passdroid;
 
 import com.kodholken.passdroid.R;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends TimeoutActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

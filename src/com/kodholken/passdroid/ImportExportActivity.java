@@ -26,7 +26,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 
-public class ImportExportActivity extends SherlockPreferenceActivity implements OnSharedPreferenceChangeListener {
+public class ImportExportActivity extends SherlockTimeoutPreferenceActivity implements OnSharedPreferenceChangeListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
