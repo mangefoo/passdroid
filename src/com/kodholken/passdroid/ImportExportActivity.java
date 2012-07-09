@@ -19,7 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
 import com.kodholken.passdroid.R;
 
 import android.content.SharedPreferences;

@@ -22,7 +22,6 @@ package com.kodholken.passdroid;
 import java.security.SecureRandom;
 import java.util.Random;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;

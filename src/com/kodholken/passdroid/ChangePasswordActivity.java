@@ -19,7 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.kodholken.passdroid.R;
 import com.kodholken.passdroid.db.DbMigration;
 import com.kodholken.passdroid.db.SystemData;

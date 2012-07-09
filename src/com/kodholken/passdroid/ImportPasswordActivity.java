@@ -19,8 +19,6 @@
 
 package com.kodholken.passdroid;
 
-import com.actionbarsherlock.app.SherlockActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
