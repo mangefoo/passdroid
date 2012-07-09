@@ -77,7 +77,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
                 if (fileImporter.isEncrypted()) {
                     String desc2 = getString(R.string.import_description_encrypted_file_present, importFile);
                     importDesc2.setText(desc2);
-                    importDesc2.setTextColor(Color.rgb(150, 255, 150));
+                    importDesc2.setTextColor(Color.rgb(50, 150, 50));
                     importButton.setEnabled(true);
                     importButton.setOnClickListener(new OnClickListener() {
                         @Override
@@ -92,7 +92,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
                             importFile,
                             fileImporter.getPasswordEntries().length, "");
                     importDesc2.setText(desc2);
-                    importDesc2.setTextColor(Color.rgb(150, 255, 150));
+                    importDesc2.setTextColor(Color.rgb(50, 150, 50));
                     importButton.setEnabled(true);
                     importButton.setOnClickListener(new OnClickListener() {
                         @Override
