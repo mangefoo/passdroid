@@ -39,10 +39,14 @@ public class SystemData extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE system (id INTEGER PRIMARY KEY AUTOINCREMENT, attribute TEXT NOT NULL, value TEXT)");
     }
 
+    /**
+     * Do not perform any operations in this method except
+     * DbMigration.handleDatabaseUpgrade(). @see DbMigration.handleDatabaseUpgrade()
+     * for explanation.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS system");
-        onCreate(db);
+        DbMigration.handleDatabaseUpgrade(db, oldVersion, newVersion);
     }
 
     public void verifyTable() {

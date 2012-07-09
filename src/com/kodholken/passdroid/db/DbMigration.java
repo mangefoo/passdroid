@@ -23,6 +23,7 @@ import com.kodholken.passdroid.Crypto;
 import com.kodholken.passdroid.PasswordEntry;
 import com.kodholken.passdroid.Session;
 import com.kodholken.passdroid.Utils;
+import com.kodholken.passdroid.Version;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,6 +39,10 @@ public class DbMigration {
     public static boolean postLoginMigration(Context context, String oldVersion, String newVersion) {
         boolean result = false;
 
+        Version _oldVersion = Version.parse(oldVersion);
+        Version _newVersion = Version.parse(newVersion);
+        Version _2_0_Version = new Version(2, 0);
+
         /*
          * Version 0.95 changed the AES mode from ECB to CBC so we
          * convert the database entries from version 0.9
@@ -50,8 +55,74 @@ public class DbMigration {
             } else {
                 Utils.error("Database conversion failed");
             }
+        } else if ((_oldVersion.compareTo(_2_0_Version) < 0) &&
+                   (_newVersion.compareTo(_2_0_Version)) >= 0) {
+            result = zeroIvToIvConversion(context);
+            if (result) {
+                Utils.debug("Database successfully converted from zero IV to IV");
+            } else {
+                Utils.debug("Database convertion from zero IV to IV failed");
+            }
         } else {
             result = true;
+        }
+
+        return result;
+    }
+    
+    /*
+     * Since we have two SQLiteOpenHelper derived classes (PasswordData and
+     * SystemData) that work on the same database table (Constants.DBNAME) all
+     * update processing needs to be done in a common function since we do not 
+     * know which class will trigger the update callback. I.e. the onUpgrade()
+     * implementations should call this, and only this, method.
+     */
+    public static void handleDatabaseUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Utils.debug("handleDatabaseUpgrade()");
+        if (oldVersion == 1 && newVersion == 2) {
+            Utils.debug("Adding table comlums 'note' and 'url' due to version " +
+                        "upgrade from 1 to 2");
+            db.execSQL("ALTER TABLE data ADD COLUMN note TEXT");
+            db.execSQL("ALTER TABLE data ADD COLUMN url TEXT");
+        }
+    }
+
+    private static boolean zeroIvToIvConversion(Context context) {
+        boolean result = false;
+
+        final String [] columns = { "id", "system", "username", "password" };
+        PasswordData passwordData = new PasswordData(context);
+        SQLiteDatabase db = passwordData.getReadableDatabase();
+        try {
+            db.beginTransaction();
+            Cursor cur = db.query("data", columns, null, null, null, null,
+                                  "id DESC");
+
+            PasswordEntry password;
+            ContentValues values = new ContentValues();
+            while (cur.moveToNext()) {
+                password = new PasswordEntry();
+                password.setId(cur.getInt(0));
+                password.setEncSystem(cur.getString(1));
+                password.setEncUsername(cur.getString(2));
+                password.setEncPassword(cur.getString(3));
+
+                password.convertZeroIvToIv(Session.getInstance().getKey());
+
+                values.put("system", password.getEncSystem());
+                values.put("username", password.getEncUsername());
+                values.put("password", password.getEncPassword());
+
+                db.update("data", values, "id=" + password.getId(), null);
+            }
+            cur.close();
+            db.setTransactionSuccessful();
+            result = true;
+        } catch (SQLiteException ex) {
+            ex.printStackTrace();
+        } finally {
+            db.endTransaction();
+            db.close();
         }
 
         return result;
@@ -106,7 +177,7 @@ public class DbMigration {
         byte [] newKey = Crypto.hmacFromPassword(newPassword);
 
         try {
-            final String [] columns = { "id", "system", "username", "password" };
+            final String [] columns = { "id", "system", "username", "password", "note", "url" };
             PasswordData passwordData = new PasswordData(context);
 
             db = passwordData.getReadableDatabase();
@@ -121,6 +192,8 @@ public class DbMigration {
                 passwords[i].setEncSystem(cur.getString(1));
                 passwords[i].setEncUsername(cur.getString(2));
                 passwords[i].setEncPassword(cur.getString(3));
+                passwords[i].setEncNote(cur.getString(4));
+                passwords[i].setEncUrl(cur.getString(5));
 
                 passwords[i].decryptAll(oldKey);
 
@@ -134,6 +207,8 @@ public class DbMigration {
                 values.put("system", passwords[i].getEncSystem());
                 values.put("username", passwords[i].getEncUsername());
                 values.put("password", passwords[i].getEncPassword());
+                values.put("note", passwords[i].getEncNote());
+                values.put("url", passwords[i].getEncUrl());
                 db.update("data", values, "id=" + passwords[i].getId(), null);
             }
 

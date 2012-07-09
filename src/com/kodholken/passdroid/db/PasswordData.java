@@ -20,6 +20,7 @@
 package com.kodholken.passdroid.db;
 
 import com.kodholken.passdroid.Constants;
+import com.kodholken.passdroid.Utils;
 
 import android.content.Context;
 import android.database.SQLException;
@@ -29,18 +30,24 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PasswordData extends SQLiteOpenHelper {	
     public PasswordData(Context ctx) {
         super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
+        System.out.println("In PasswordData()");
+
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE data (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "system TEXT NOT NULL, username TEXT, password TEXT)");
+                   "system TEXT NOT NULL, username TEXT, password TEXT, note TEXT, url TEXT)");
     }
-
+    
+    /**
+     * Do not perform any operations in this method except
+     * DbMigration.handleDatabaseUpgrade(). @see DbMigration.handleDatabaseUpgrade()
+     * for explanation.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS data");
-        onCreate(db);
+        DbMigration.handleDatabaseUpgrade(db, oldVersion, newVersion);
     }
 
     public void verifyTable() {

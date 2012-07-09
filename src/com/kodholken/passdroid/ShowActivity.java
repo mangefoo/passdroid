@@ -45,6 +45,8 @@ public class ShowActivity extends SherlockActivity {
     private String system;
     private String username;
     private String password;
+    private String note;
+    private String url;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class ShowActivity extends SherlockActivity {
         system = extras.getString("system");
         username = extras.getString("username");
         password = extras.getString("password");
+        note = extras.getString("note");
+        url = extras.getString("url");
 
         this.setContentView(R.layout.show);
 
@@ -63,7 +67,7 @@ public class ShowActivity extends SherlockActivity {
         TextView usernameHeaderView = (TextView) findViewById(R.id.username);
 
         // Do not show the username entry if it does not exist
-        if (username.length() > 0) {
+        if (username != null && username.length() > 0) {
             usernameView.setText(username);
         } else {
             usernameView.setVisibility(View.GONE);
@@ -71,6 +75,20 @@ public class ShowActivity extends SherlockActivity {
         }
         ((TextView) findViewById(R.id.password)).setText(password);
 
+        if (note != null && note.length() > 0) {
+            ((TextView) findViewById(R.id.note_title)).setVisibility(View.VISIBLE);
+            TextView text = (TextView) findViewById(R.id.note);
+            text.setText(note);
+            text.setVisibility(View.VISIBLE);
+        }
+        
+        if (note != null && note.length() > 0) {
+            ((TextView) findViewById(R.id.url_title)).setVisibility(View.VISIBLE);
+            TextView text = (TextView) findViewById(R.id.url);
+            text.setText(url);
+            text.setVisibility(View.VISIBLE);
+        }
+        
         setupClipboardAction();
         
         getSupportActionBar().setTitle(system);
@@ -144,6 +162,8 @@ public class ShowActivity extends SherlockActivity {
         i.putExtra("system", system);
         i.putExtra("username", username);
         i.putExtra("password", password);
+        i.putExtra("note", note);
+        i.putExtra("url", url);
 
         startActivity(i);
         finish();

@@ -44,6 +44,7 @@
       android:layout_height="wrap_content"/>
 
     <TextView
+      android:id="@+id/note_title"
       android:visibility="gone"
       android:paddingTop="10dip"
       android:textColor="#999999"
@@ -60,6 +61,7 @@
       android:layout_height="wrap_content"/>
     
     <TextView
+      android:id="@+id/url_title"
       android:visibility="gone"
       android:paddingTop="10dip"
       android:textColor="#999999"
@@ -69,6 +71,7 @@
       android:layout_height="wrap_content"/>
     
     <TextView
+      android:autoLink="web"
       android:visibility="gone"
       android:id="@+id/url"
       android:singleLine="true"

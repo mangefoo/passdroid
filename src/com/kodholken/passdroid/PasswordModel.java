@@ -79,6 +79,8 @@ public class PasswordModel {
                 values.put("system",   entry.getEncSystem());
                 values.put("username", entry.getEncUsername());
                 values.put("password", entry.getEncPassword());
+                values.put("note",     entry.getEncNote());
+                values.put("url",      entry.getEncNote());
 
                 long id = db.insertOrThrow("data", null, values);
                 entry.setId(id);
@@ -120,7 +122,7 @@ public class PasswordModel {
     }
 
     private void loadPasswords() {
-        final String [] columns = { "id", "system", "username", "password" };
+        final String [] columns = { "id", "system", "username", "password", "note", "url" };
         SQLiteDatabase db = passwordData.getReadableDatabase();
         Cursor cur = db.query("data", columns, null, null, null, null, "id DESC");
 
@@ -132,6 +134,8 @@ public class PasswordModel {
             passwords[i].setEncSystem(cur.getString(1));
             passwords[i].setEncUsername(cur.getString(2));
             passwords[i].setEncPassword(cur.getString(3));
+            passwords[i].setEncNote(cur.getString(4));
+            passwords[i].setEncUrl(cur.getString(5));
 
             passwords[i].decryptAll(Session.getInstance().getKey());
 

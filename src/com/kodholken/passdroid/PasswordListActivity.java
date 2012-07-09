@@ -71,7 +71,7 @@ PasswordModelListener {
     private TextView     countdownTextView;
     private int          countdownValue;
     private Handler      countdownHandler;
-    //private TextView     titleBarCountTextView;
+    private TextView     passwordCountTextView;
 
     public PasswordListActivity() {
         loadSettingsOnResume = false;
@@ -101,10 +101,9 @@ PasswordModelListener {
 
         emptyListHelp = (TextView) findViewById(
                 com.kodholken.passdroid.R.id.empty_list_help);
-        /*
-		titleBarCountTextView = (TextView) findViewById
+        
+        passwordCountTextView = (TextView) findViewById
 		                         (com.kodholken.passdroid.R.id.password_count);
-         */
         getListView().setTextFilterEnabled(true);
 
         countdownLayout = new LinearLayout(this);
@@ -239,6 +238,8 @@ PasswordModelListener {
         i.putExtra("system",   model.getAt(position).getDecSystem());
         i.putExtra("username", model.getAt(position).getDecUsername());
         i.putExtra("password", model.getAt(position).getDecPassword());
+        i.putExtra("note",     model.getAt(position).getDecNote());
+        i.putExtra("url",      model.getAt(position).getDecUrl());
 
         listPosition = list.getFirstVisiblePosition();
 
@@ -347,10 +348,12 @@ PasswordModelListener {
 
         if (entries.length == 0) {
             emptyListHelp.setVisibility(View.VISIBLE);
+            passwordCountTextView.setVisibility(View.GONE);
             list.setVisibility(View.GONE);
         } else {
             emptyListHelp.setVisibility(View.GONE);
             list.setVisibility(View.VISIBLE);
+            passwordCountTextView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -358,7 +361,7 @@ PasswordModelListener {
         int count = PasswordModel.getInstance(this).getPasswords().length;
         String quantifier = count == 1 ? "" : "s";
 
-        //titleBarCountTextView.setText(count + " password" + quantifier);
+        passwordCountTextView.setText(count + " password" + quantifier);
     }
 
     private void loadSettings() {}

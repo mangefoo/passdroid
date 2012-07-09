@@ -89,12 +89,19 @@ public class AddActivity extends SherlockActivity {
         entry.setDecUsername(v.getText().toString());
         v = (EditText) this.findViewById(R.id.password);
         entry.setDecPassword(v.getText().toString());
+        v = (EditText) this.findViewById(R.id.note);
+        entry.setDecNote(v.getText().toString());
+        v = (EditText) this.findViewById(R.id.url);
+        entry.setDecUrl(v.getText().toString());
+
 
         entry.encryptAll(Session.getInstance().getKey());
 
         values.put("system",   entry.getEncSystem());	
         values.put("username", entry.getEncUsername());
         values.put("password", entry.getEncPassword());
+        values.put("note",     entry.getEncNote());
+        values.put("url",      entry.getEncUrl());
 
         PasswordData passwordData = new PasswordData(this);
         SQLiteDatabase db = passwordData.getWritableDatabase();

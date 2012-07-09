@@ -40,6 +40,8 @@ public class EditActivity extends SherlockActivity {
     private Button saveButton;
     private Button generateButton;
     private EditText password;
+    private EditText note;
+    private EditText url;
 
     private Intent generateIntent;
     private long passwordId;
@@ -58,6 +60,20 @@ public class EditActivity extends SherlockActivity {
 
         password = (EditText) findViewById(R.id.password);
         password.setText(extras.getString("password"));
+        
+        String value;
+        
+        note = (EditText) findViewById(R.id.note);
+        value = extras.getString("note");
+        if (value != null) {
+            note.setText(value);
+        }
+        
+        url = (EditText) findViewById(R.id.url);
+        value = extras.getString("url");
+        if (value != null) {
+            url.setText(value);
+        }
 
         saveButton = (Button) this.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new OnClickListener() {
@@ -76,18 +92,25 @@ public class EditActivity extends SherlockActivity {
         String system   = ((TextView) findViewById(R.id.system)).getText().toString();
         String username = ((TextView) findViewById(R.id.username)).getText().toString();
         String password = ((TextView) findViewById(R.id.password)).getText().toString();
+        String note = ((TextView) findViewById(R.id.note)).getText().toString();
+        String url = ((TextView) findViewById(R.id.url)).getText().toString();
 
+        
         ContentValues values = new ContentValues();
 
         PasswordEntry entry = new PasswordEntry();
         entry.setDecSystem(system);
         entry.setDecUsername(username);
         entry.setDecPassword(password);
+        entry.setDecNote(note);
+        entry.setDecUrl(url);
         entry.encryptAll(Session.getInstance().getKey());
 
         values.put("system",   entry.getEncSystem());	
         values.put("username", entry.getEncUsername());
         values.put("password", entry.getEncPassword());
+        values.put("note", entry.getEncNote());
+        values.put("url", entry.getEncUrl());
 
         PasswordData passwordData = new PasswordData(this);
         SQLiteDatabase db = passwordData.getWritableDatabase();

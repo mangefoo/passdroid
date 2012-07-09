@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      android:versionCode="20"
-      package="com.kodholken.passdroid" android:versionName="1.9">
+      android:versionCode="21"
+      package="com.kodholken.passdroid" android:versionName="2.0">
     <supports-screens
         android:largeScreens="true"
         android:normalScreens="true"
@@ -70,7 +70,6 @@
                   android:name=".DisplayPasswordActivity"/>
         
         <activity android:label="@string/import_password_title"
-                  android:theme="@android:style/Theme.Dialog"
                   android:name=".ImportPasswordActivity"/>
                          
     </application>
