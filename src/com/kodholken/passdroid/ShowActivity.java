@@ -81,7 +81,7 @@ public class ShowActivity extends SherlockTimeoutActivity {
             text.setVisibility(View.VISIBLE);
         }
         
-        if (note != null && note.length() > 0) {
+        if (url != null && url.length() > 0) {
             ((TextView) findViewById(R.id.url_title)).setVisibility(View.VISIBLE);
             TextView text = (TextView) findViewById(R.id.url);
             text.setText(url);

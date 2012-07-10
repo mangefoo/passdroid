@@ -44,16 +44,35 @@ public class PasswordEntry implements Comparable<PasswordEntry> {
         decSystem   = decrypt(key, encSystem);
         decUsername = decrypt(key, encUsername);
         decPassword = decrypt(key, encPassword);
-        decNote     = decrypt(key, encNote);
-        decUrl      = decrypt(key, encUrl);
+        if (encNote != null) {
+            decNote = decrypt(key, encNote);
+        } else {
+            decNote = null;
+        }
+        
+        if (encUrl != null) {
+            decUrl = decrypt(key, encUrl);
+        } else {
+            decUrl = null;
+        }
     }
 
     public void encryptAll(byte [] key) {
         encSystem   = encrypt(key, decSystem);
         encUsername = encrypt(key, decUsername);
         encPassword = encrypt(key, decPassword);
-        encNote     = encrypt(key, decNote);
-        encUrl      = encrypt(key, decUrl);
+        
+        if (decNote != null) {
+            encNote = encrypt(key, decNote);
+        } else {
+            encNote = null;
+        }
+        
+        if (decUrl != null) {
+            encUrl      = encrypt(key, decUrl);
+        } else {
+            encUrl = null;
+        }
     }
 
     /*
