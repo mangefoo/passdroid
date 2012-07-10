@@ -63,7 +63,7 @@ public class ShowActivity extends SherlockTimeoutActivity {
         this.setContentView(R.layout.show);
 
         TextView usernameView = (TextView) findViewById(R.id.username);
-        TextView usernameHeaderView = (TextView) findViewById(R.id.username);
+        TextView usernameHeaderView = (TextView) findViewById(R.id.username_title);
 
         // Do not show the username entry if it does not exist
         if (username != null && username.length() > 0) {
