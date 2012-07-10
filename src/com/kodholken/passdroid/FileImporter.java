@@ -244,6 +244,8 @@ public class FileImporter {
             String name  = system.getAttributes().getNamedItem("name").getNodeValue();
             String username = "";
             String password = "";
+            String note = "";
+            String url = "";
 
             NodeList nodes = system.getChildNodes();
 
@@ -257,6 +259,14 @@ public class FileImporter {
                     if (node.getFirstChild() != null) {
                         password = node.getFirstChild().getNodeValue();
                     }
+                } else if (node.getNodeName().equals("note")) {
+                    if (node.getFirstChild() != null) {
+                        note = node.getFirstChild().getNodeValue();
+                    }
+                } else if (node.getNodeName().equals("url")) {
+                    if (node.getFirstChild() != null) {
+                        url = node.getFirstChild().getNodeValue();
+                    }
                 }
             }
 
@@ -264,6 +274,8 @@ public class FileImporter {
             entry.setDecSystem(name);
             entry.setDecUsername(username);
             entry.setDecPassword(password);
+            entry.setDecNote(note);
+            entry.setDecUrl(url);
 
             return entry;
         }

@@ -109,6 +109,14 @@ public class FileExporter {
                 String password = "<![CDATA[" + entry.getDecPassword().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
                 sb.append("    <password>" + password + "</password>\n");
             }
+            if (entry.getDecNote() != null) {  
+                String note = "<![CDATA[" + entry.getDecNote().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
+                sb.append("    <note>" + note + "</note>\n");
+            }
+            if (entry.getDecUrl() != null) {  
+                String url = "<![CDATA[" + entry.getDecUrl().replaceAll("]]>", "]]>]]><![CDATA[") + "]]>";
+                sb.append("    <url>" + url + "</url>\n");
+            }
             sb.append("  </system>\n");
         }
         sb.append("</passdroid>\n");

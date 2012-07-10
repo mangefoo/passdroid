@@ -80,7 +80,7 @@ public class PasswordModel {
                 values.put("username", entry.getEncUsername());
                 values.put("password", entry.getEncPassword());
                 values.put("note",     entry.getEncNote());
-                values.put("url",      entry.getEncNote());
+                values.put("url",      entry.getEncUrl());
 
                 long id = db.insertOrThrow("data", null, values);
                 entry.setId(id);
