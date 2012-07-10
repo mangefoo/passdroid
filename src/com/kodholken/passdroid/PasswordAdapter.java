@@ -19,6 +19,8 @@
 
 package com.kodholken.passdroid;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -29,24 +31,27 @@ import android.widget.TextView;
 
 public class PasswordAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
+    private PasswordEntry [] hits;
     private PasswordEntry [] entries;
     private boolean showUsername;
+    private String filter = null;
 
     public PasswordAdapter(Context context, PasswordEntry [] entries, boolean showUsername) {
         this.entries = entries;
+        this.hits = entries;
         this.showUsername = showUsername;
         mInflater = LayoutInflater.from(context);
     }
 
     public int getCount() {
-        return entries.length;
+        return hits.length;
     }
 
     /**
      * @see android.widget.ListAdapter#getItem(int)
      */
     public Object getItem(int position) {
-        return position;
+        return hits[position];
     }
 
     /**
@@ -54,6 +59,31 @@ public class PasswordAdapter extends BaseAdapter {
      */
     public long getItemId(int position) {
         return position;
+    }
+    
+    public void setFilterString(String s) {
+        ArrayList<PasswordEntry> hitList = new ArrayList<PasswordEntry>();
+        
+        if (s == null) {
+            filter = null;
+            hits = entries;
+            return;
+        }
+        
+        filter = s.toLowerCase();
+        
+        for (PasswordEntry entry : entries) {
+            if (filter == null || filter.equals("") ||
+                entry.getDecSystem().toLowerCase().contains(filter)) {
+                hitList.add(entry);
+            }
+        }
+        
+        hits = new PasswordEntry[hitList.size()];
+        int i = 0;
+        for (PasswordEntry entry : hitList) {
+            hits[i++] = entry;
+        }
     }
 
     /**
@@ -78,9 +108,9 @@ public class PasswordAdapter extends BaseAdapter {
         }
 
         // Bind the data efficiently with the holder.
-        holder.system.setText(entries[position].getDecSystem());
-        if (showUsername && entries[position].getDecUsername().length() > 0) {
-            holder.username.setText(entries[position].getDecUsername());
+        holder.system.setText(hits[position].getDecSystem());
+        if (showUsername && hits[position].getDecUsername().length() > 0) {
+            holder.username.setText(hits[position].getDecUsername());
             holder.username.setVisibility(View.VISIBLE);
             holder.separator.setVisibility(View.VISIBLE);
         } else {

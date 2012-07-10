@@ -22,6 +22,7 @@ package com.kodholken.passdroid;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
 import com.kodholken.passdroid.db.PasswordData;
 
 import android.app.AlertDialog;
@@ -34,12 +35,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.ClipboardManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -71,6 +77,10 @@ PasswordModelListener {
     private int          countdownValue;
     private Handler      countdownHandler;
     private TextView     passwordCountTextView;
+
+    private boolean passwordCounterIsVisible = false;
+
+    private PasswordAdapter passwordAdapter = null;
 
     public PasswordListActivity() {
         loadSettingsOnResume = false;
@@ -154,16 +164,82 @@ PasswordModelListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE, OPTION_MENU_SEARCH, Menu.NONE, getString(R.string.options_search))
+        MenuItem item;
+        
+        item = menu.add(Menu.NONE, OPTION_MENU_SEARCH, Menu.NONE, getString(R.string.options_search));
+        
+        item
+        .setActionView(R.layout.collapsable_search)
         .setIcon(android.R.drawable.ic_menu_search)
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
+        final EditText searchField = (EditText) item.getActionView().findViewById(R.id.search_field);
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                passwordAdapter.setFilterString(arg0.toString());
+                passwordAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1,
+                    int arg2, int arg3) {
+                // TODO Auto-generated method stub
+                
+            }
+
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+                    int arg3) {
+                // TODO Auto-generated method stub
+                
+            }    
+        });
+
+        item.setOnActionExpandListener(new OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                passwordCountTextView.setVisibility(View.GONE);
+                searchField.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        searchField.setText("");
+                        searchField.setFocusable(true);
+                        searchField.setFocusableInTouchMode(true);
+                        searchField.requestFocus();
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+                System.out.println("Expaneded!");
+
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                searchField.setFocusable(false);
+                searchField.setFocusableInTouchMode(false);
+
+                if (passwordCounterIsVisible) {
+                    passwordCountTextView.setVisibility(View.VISIBLE);
+                }
+                passwordAdapter.setFilterString(null);
+                passwordAdapter.notifyDataSetChanged();
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchField.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                System.out.println("Collapsed!");
+
+                return true;
+            }
+        });
+        
         menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE, getString(R.string.options_add))
         .setIcon(android.R.drawable.ic_menu_add);
-
-
-        MenuItem item;
-
+        
         item = menu.add(Menu.NONE, OPTION_MENU_GENERATE, Menu.NONE,
                 getString(R.string.options_generate_password));
         item.setIcon(android.R.drawable.ic_menu_rotate);
@@ -221,8 +297,10 @@ PasswordModelListener {
         case OPTION_MENU_LOGOUT:
             confirmLogout();
             break;
+        default:
+            return super.onOptionsItemSelected(item);
         }
-
+        
         return true;
     }
 
@@ -230,15 +308,16 @@ PasswordModelListener {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        PasswordModel model = PasswordModel.getInstance(this);
+        //PasswordModel model = PasswordModel.getInstance(this);
+        PasswordEntry entry = (PasswordEntry) passwordAdapter.getItem(position);
 
         Intent i = new Intent(this, ShowActivity.class);
-        i.putExtra("id",       model.getAt(position).getId());
-        i.putExtra("system",   model.getAt(position).getDecSystem());
-        i.putExtra("username", model.getAt(position).getDecUsername());
-        i.putExtra("password", model.getAt(position).getDecPassword());
-        i.putExtra("note",     model.getAt(position).getDecNote());
-        i.putExtra("url",      model.getAt(position).getDecUrl());
+        i.putExtra("id",       entry.getId());
+        i.putExtra("system",   entry.getDecSystem());
+        i.putExtra("username", entry.getDecUsername());
+        i.putExtra("password", entry.getDecPassword());
+        i.putExtra("note",     entry.getDecNote());
+        i.putExtra("url",      entry.getDecUrl());
 
         listPosition = list.getFirstVisiblePosition();
 
@@ -339,19 +418,23 @@ PasswordModelListener {
     private void loadPasswords() {
         PasswordEntry [] entries =
             PasswordModel.getInstance(this).getPasswords();
-        setListAdapter(new PasswordAdapter(this, entries,
-                PreferenceManager.getDefaultSharedPreferences(this).
-                getBoolean("display_username", true))); 
+        
+        passwordAdapter = new PasswordAdapter(this, entries,
+                                              PreferenceManager.getDefaultSharedPreferences(this).
+                                              getBoolean("display_username", true)); 
+        setListAdapter(passwordAdapter); 
 
         updateTitlebar();
 
         if (entries.length == 0) {
             emptyListHelp.setVisibility(View.VISIBLE);
+            passwordCounterIsVisible = false;
             passwordCountTextView.setVisibility(View.GONE);
             list.setVisibility(View.GONE);
         } else {
             emptyListHelp.setVisibility(View.GONE);
             list.setVisibility(View.VISIBLE);
+            passwordCounterIsVisible = true;
             passwordCountTextView.setVisibility(View.VISIBLE);
         }
     }

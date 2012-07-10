@@ -46,11 +46,12 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.\
 
 <!-- Initialize  -->
 <string name="initialize_title">Initialize</string>
-<string name="initialize_text">\
-This is your first time running this application and you need to choose a master password \
+<string name="initialize_welcome">Welcome to Passdroid!</string>
+<string name="initialize_text">Before continuing you need to choose a master password \
 that will protect the information that is stored on the device. If this password is forgotten \
-the passwords stored are not recoverable. Enter a password twice below \
-and press OK.</string>
+the passwords stored are not recoverable.</string>
+<string name="enter_password">Enter the password you want to use:</string>
+<string name="repeat_password">Enter the password again:</string>
 <string name="initialize_mismatch_title">Mismatch</string>
 <string name="initialize_mismatch_text">"The passwords you entered did not match. Please try again."</string>
 
@@ -119,5 +120,6 @@ Import not available. To enable it copy your exported password file to\n
 <string name="ok">OK</string>
 <string name="success">Success</string>
 <string name="failure">Failure</string>
+<string name="continue_s">Continue</string>
 
 </resources>
