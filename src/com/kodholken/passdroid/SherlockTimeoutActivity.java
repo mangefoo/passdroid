@@ -19,35 +19,34 @@ public class SherlockTimeoutActivity extends SherlockActivity {
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                System.out.println("Got broadcast");
                 Session.getInstance().setLoggedIn(false);
                 finish();
             }
         };
 
         registerReceiver(receiver, filter);
-        System.out.println("Receiver registered");
 
         super.onCreate(savedInstanceState);
     }
-    
+
     @Override
     protected void onPause() {
-        System.out.println("onPause()");
-        Session.setTimeoutTimer(this);
+        if (Session.getInstance().decResume() == 0) {
+            Session.setTimeoutTimer(this);
+        }
         super.onPause();
-    };
-    
-    @Override
-    protected void onResume() {
-        System.out.println("onResume()");
-        Session.clearTimeoutTimer(this);
-        super.onResume();
     }
     
     @Override
+    protected void onResume() {
+        Session.getInstance().incResume();
+        Session.clearTimeoutTimer(this);
+        super.onResume();
+    }
+
+    
+    @Override
     protected void onDestroy() {
-        System.out.println("onDestroy()");
         unregisterReceiver(receiver);
         super.onDestroy();
     }

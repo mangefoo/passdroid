@@ -46,6 +46,8 @@ public class Session {
     private static Session session;  // Singleton instance of this class
     
     private PendingIntent timeoutIntent;
+    
+    private int resumes = 0;
 
     private Session() {
         needReload = false;
@@ -109,6 +111,22 @@ public class Session {
 
     public boolean getExitMain() {
         return exitMain;
+    }
+    
+    public int incResume() {
+        return ++resumes;
+    }
+    
+    public int decResume() {
+        if (resumes < 1) {
+            throw new RuntimeException("Invalid resume state");
+        }
+        
+        return --resumes;
+    }
+    
+    public int getResumes() {
+        return resumes;
     }
 
     public static void setTimeoutTimer(Context context) {
