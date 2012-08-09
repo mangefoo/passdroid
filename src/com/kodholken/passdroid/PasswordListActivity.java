@@ -81,6 +81,8 @@ PasswordModelListener {
     private boolean passwordCounterIsVisible = false;
 
     private PasswordAdapter passwordAdapter = null;
+    
+    MenuItem searchMenuItem;
 
     public PasswordListActivity() {
         loadSettingsOnResume = false;
@@ -161,19 +163,23 @@ PasswordModelListener {
             loadSettings();
         }
     }
+    
+    @Override
+    public boolean onSearchRequested() {
+        searchMenuItem.expandActionView();
+        return true;
+    }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem item;
+    public boolean onCreateOptionsMenu(Menu menu) {        
+        searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_SEARCH, Menu.NONE, getString(R.string.options_search));
         
-        item = menu.add(Menu.NONE, OPTION_MENU_SEARCH, Menu.NONE, getString(R.string.options_search));
-        
-        item
+        searchMenuItem
         .setActionView(R.layout.collapsable_search)
         .setIcon(android.R.drawable.ic_menu_search)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
-        final EditText searchField = (EditText) item.getActionView().findViewById(R.id.search_field);
+        final EditText searchField = (EditText) searchMenuItem.getActionView().findViewById(R.id.search_field);
 
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -197,7 +203,7 @@ PasswordModelListener {
             }    
         });
 
-        item.setOnActionExpandListener(new OnActionExpandListener() {
+        searchMenuItem.setOnActionExpandListener(new OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
                 passwordCountTextView.setVisibility(View.GONE);
@@ -240,24 +246,24 @@ PasswordModelListener {
         menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE, getString(R.string.options_add))
         .setIcon(android.R.drawable.ic_menu_add);
         
-        item = menu.add(Menu.NONE, OPTION_MENU_GENERATE, Menu.NONE,
+        searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_GENERATE, Menu.NONE,
                 getString(R.string.options_generate_password));
-        item.setIcon(android.R.drawable.ic_menu_rotate);
+        searchMenuItem.setIcon(android.R.drawable.ic_menu_rotate);
 
-        item = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE,
+        searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE,
                 getString(R.string.options_settings));
-        item.setIcon(android.R.drawable.ic_menu_preferences);
+        searchMenuItem.setIcon(android.R.drawable.ic_menu_preferences);
 
-        item = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE,
+        searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE,
                 getString(R.string.options_about));
-        item.setIcon(android.R.drawable.ic_menu_info_details);
+        searchMenuItem.setIcon(android.R.drawable.ic_menu_info_details);
 
-        item = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE,
+        searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE,
                 getString(R.string.options_logout));
-        item.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+        searchMenuItem.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
 
         if (Constants.DEBUG) {
-            item = menu.add(Menu.NONE,OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
+            searchMenuItem = menu.add(Menu.NONE,OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
         }
 
         return super.onCreateOptionsMenu(menu);
