@@ -63,10 +63,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
 
         importDesc2 = (TextView) this.findViewById(R.id.import_desc_2);
         if (!hasFile) {
-            String desc2 = formatString(
-                    getString(R.string.import_description_file_missing),
-                    importFile, 0, "");
-            importDesc2.setText(desc2);
+            importDesc2.setText(getString(R.string.import_description_file_missing));
             importDesc2.setTextColor(Color.rgb(255, 50, 50));
         } else {
             fileImporter = new FileImporter(importFile, Utils.getVersion(this));

@@ -102,8 +102,7 @@ The file %f contains %n entries.</string>
 The file %s is encrypted.</string>
 
 <string name="import_description_file_missing">\
-Import not available. To enable it copy your exported password file to\n
-<b>%f</b>.</string>
+Import not available. To enable it transfer your exported password file to the device\'s external storage. Make sure that the file is named passdroid_db.xml.</string>
 
 <string name="import_description_failure" formatted="false">Failed to read %f: %e.</string>
 
