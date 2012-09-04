@@ -33,7 +33,6 @@ public class ImportPasswordActivity extends SherlockTimeoutActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.setContentView(R.layout.import_password);
         
         password = (EditText) findViewById(R.id.password);
