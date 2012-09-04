@@ -15,5 +15,6 @@
         android:layout_height="wrap_content"
         android:hint="Search"
         android:singleLine="true"
-        android:layout_toLeftOf="@+id/search_button"/>    
+        android:inputType="text|textNoSuggestions"
+        android:layout_toLeftOf="@+id/search_button"/> 
 </LinearLayout>
