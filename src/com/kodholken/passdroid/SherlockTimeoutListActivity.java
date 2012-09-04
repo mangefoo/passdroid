@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.WindowManager.LayoutParams;
 
 import com.actionbarsherlock.app.SherlockListActivity;
 
@@ -13,6 +14,8 @@ public class SherlockTimeoutListActivity extends SherlockListActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE);
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(Session.TIMEOUT_ACTION);
         
