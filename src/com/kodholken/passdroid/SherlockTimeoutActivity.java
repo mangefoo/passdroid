@@ -14,7 +14,9 @@ public class SherlockTimeoutActivity extends SherlockActivity {
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getWindow().setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE);
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+            getWindow().setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE);
+        }
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Session.TIMEOUT_ACTION);
