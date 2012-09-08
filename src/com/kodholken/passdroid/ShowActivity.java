@@ -51,6 +51,8 @@ public class ShowActivity extends SherlockTimeoutActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Bundle extras = getIntent().getExtras();
 
         passwordId = extras.getLong("id");
@@ -108,6 +110,13 @@ public class ShowActivity extends SherlockTimeoutActivity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            // User press home back button
+            finish();
+            overridePendingTransition(0, 0);
+            return true;
+        }
+        
         String option = item.getTitle().toString();
         
         if (option.equals("Edit")) {
