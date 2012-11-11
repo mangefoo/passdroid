@@ -218,7 +218,6 @@ PasswordModelListener {
                         imm.showSoftInput(searchField, InputMethodManager.SHOW_IMPLICIT);
                     }
                 });
-                System.out.println("Expaneded!");
 
                 return true;
             }
@@ -236,8 +235,6 @@ PasswordModelListener {
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchField.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-                System.out.println("Collapsed!");
 
                 return true;
             }

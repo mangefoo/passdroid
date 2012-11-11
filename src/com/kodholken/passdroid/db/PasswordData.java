@@ -29,8 +29,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class PasswordData extends SQLiteOpenHelper {	
     public PasswordData(Context ctx) {
         super(ctx, Constants.DBNAME, null, Constants.DBVERSION);
-        System.out.println("In PasswordData()");
-
     }
 
     @Override

@@ -138,13 +138,10 @@ public class Session {
         if (session.timeoutIntent != null) {
             am.cancel(session.timeoutIntent);
             session.timeoutIntent = null;
-            System.out.println("Old timeout cancelled");
         }
         
         session.timeoutIntent = PendingIntent.getBroadcast(context, 0, new Intent(TIMEOUT_ACTION), PendingIntent.FLAG_ONE_SHOT);
         am.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, session.timeoutIntent);
-        
-        System.out.println("Timeout alarm set");
     }
 
     public static void clearTimeoutTimer(Context context) {
@@ -154,7 +151,6 @@ public class Session {
         if (session.timeoutIntent != null) {
             am.cancel(session.timeoutIntent);
             session.timeoutIntent = null;
-            System.out.println("Timeout cancelled");
         }
     }
     
