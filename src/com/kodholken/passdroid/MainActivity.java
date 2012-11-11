@@ -24,6 +24,7 @@ import com.kodholken.passdroid.db.SystemData;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 /**
@@ -35,8 +36,11 @@ public class MainActivity extends Activity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-	}
+        super.onCreate(savedInstanceState);
+        
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(new ScreenOffListener(), filter);
+    }
     
     @Override
     public void onResume() {

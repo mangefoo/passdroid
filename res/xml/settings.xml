@@ -10,6 +10,15 @@
            android:targetClass="com.kodholken.passdroid.ChangePasswordActivity"/>
 </Preference>    
 
+<Preference
+  android:key="import_export"
+  android:title="Import / Export"
+  android:summary="Allows you to import and export the password database">
+
+   <intent android:targetPackage="com.kodholken.passdroid"
+           android:targetClass="com.kodholken.passdroid.ImportExportActivity"/>
+</Preference>  
+
 <CheckBoxPreference
   android:key="close_logout"
   android:title="Log out on close"
@@ -22,12 +31,10 @@
   android:defaultValue="true"
   android:summary="Show the username in addition to the system in the list of passwords."/>
   
-<Preference
-  android:key="import_export"
-  android:title="Import / Export">
-
-   <intent android:targetPackage="com.kodholken.passdroid"
-           android:targetClass="com.kodholken.passdroid.ImportExportActivity"/>
-</Preference>  
+<CheckBoxPreference
+  android:key="clear_clipboard"
+  android:title="Auto clear clipboard"
+  android:defaultValue="true"
+  android:summary="Automatically remove passwords from the clipboard when the screen is turned off."/>
   
 </PreferenceScreen>

@@ -143,9 +143,13 @@ public class ShowActivity extends SherlockTimeoutActivity {
         alertDialog.setButton(AlertDialog.BUTTON1, "Yes",
                 new DialogInterface.OnClickListener() { 
             public void onClick(DialogInterface dialog, int which) {
+                String password = passwordView.getText().toString();
+
                 ClipboardManager clipboard = 
                     (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                clipboard.setText(passwordView.getText());
+                clipboard.setText(password);
+
+                Session.getInstance().setClipboardPassword(password);
             }
         });
 

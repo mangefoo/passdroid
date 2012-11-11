@@ -48,6 +48,8 @@ public class Session {
     private PendingIntent timeoutIntent;
     
     private int resumes = 0;
+    
+    private String clipboardPassword;
 
     private Session() {
         needReload = false;
@@ -154,5 +156,13 @@ public class Session {
             session.timeoutIntent = null;
             System.out.println("Timeout cancelled");
         }
+    }
+    
+    public String getClipboardPassword() {
+        return clipboardPassword;
+    }
+    
+    public void setClipboardPassword(String clipboardPassword) {
+        this.clipboardPassword = clipboardPassword;
     }
 }
