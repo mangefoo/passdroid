@@ -184,8 +184,10 @@ PasswordModelListener {
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                passwordAdapter.setFilterString(arg0.toString());
-                passwordAdapter.notifyDataSetChanged();
+                if (passwordAdapter != null) {
+                    passwordAdapter.setFilterString(arg0.toString());
+                    passwordAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
