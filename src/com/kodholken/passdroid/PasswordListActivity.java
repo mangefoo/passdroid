@@ -110,11 +110,9 @@ PasswordModelListener {
         // Make sure the password entries is loaded from the database
         Session.getInstance().setNeedReload(true);
 
-        emptyListHelp = (TextView) findViewById(
-                com.kodholken.passdroid.R.id.empty_list_help);
+        emptyListHelp = (TextView) findViewById(R.id.empty_list_help);
         
-        passwordCountTextView = (TextView) findViewById
-		                         (com.kodholken.passdroid.R.id.password_count);
+        passwordCountTextView = (TextView) findViewById(R.id.password_count);
         getListView().setTextFilterEnabled(true);
 
         countdownLayout = new LinearLayout(this);
@@ -176,7 +174,7 @@ PasswordModelListener {
         
         searchMenuItem
         .setActionView(R.layout.collapsable_search)
-        .setIcon(android.R.drawable.ic_menu_search)
+        .setIcon(R.drawable.ic_menu_search)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 
         final EditText searchField = (EditText) searchMenuItem.getActionView().findViewById(R.id.search_field);
@@ -243,23 +241,23 @@ PasswordModelListener {
         });
         
         menu.add(Menu.NONE, OPTION_MENU_ADD, Menu.NONE, getString(R.string.options_add))
-        .setIcon(android.R.drawable.ic_menu_add);
+        .setIcon(R.drawable.ic_menu_add);
         
         searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_GENERATE, Menu.NONE,
                 getString(R.string.options_generate_password));
-        searchMenuItem.setIcon(android.R.drawable.ic_menu_rotate);
+        searchMenuItem.setIcon(R.drawable.ic_menu_rotate);
 
         searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_SETTINGS, Menu.NONE,
                 getString(R.string.options_settings));
-        searchMenuItem.setIcon(android.R.drawable.ic_menu_preferences);
+        searchMenuItem.setIcon(R.drawable.ic_menu_preferences);
 
         searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_ABOUT, Menu.NONE,
                 getString(R.string.options_about));
-        searchMenuItem.setIcon(android.R.drawable.ic_menu_info_details);
+        searchMenuItem.setIcon(R.drawable.ic_menu_info_details);
 
         searchMenuItem = menu.add(Menu.NONE, OPTION_MENU_LOGOUT, Menu.NONE,
                 getString(R.string.options_logout));
-        searchMenuItem.setIcon(android.R.drawable.ic_menu_close_clear_cancel);
+        searchMenuItem.setIcon(R.drawable.ic_menu_close_clear_cancel);
 
         if (Constants.DEBUG) {
             searchMenuItem = menu.add(Menu.NONE,OPTION_MENU_DROPDB, Menu.NONE, "Drop DB");
