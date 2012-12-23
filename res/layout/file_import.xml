@@ -2,51 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center_vertical"
     android:background="@drawable/bg_striped"
+    android:gravity="center_vertical"
     android:orientation="vertical"
-    android:padding="10dip">
+    android:padding="10dip" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:background="#ffffff"
-        android:padding="20dip">
+        android:orientation="vertical"
+        android:padding="10dip" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dip"
             android:text="@string/import_description" />
 
         <TextView
             android:id="@+id/import_desc_2"
+            android:paddingTop="5dip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#ffffff"
-        android:paddingTop="5dip" >
-
-        <Button
-            android:id="@+id/import_button"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="Import" />
+            android:background="#ffffff"
+            android:orientation="horizontal"
+            android:paddingTop="10dip" >
 
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Cancel" />
+            <Button
+                android:id="@+id/import_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="Import" />
+
+            <Button
+                android:id="@+id/cancel_button"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cancel" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

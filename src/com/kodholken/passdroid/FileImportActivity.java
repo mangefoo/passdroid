@@ -20,11 +20,14 @@
 package com.kodholken.passdroid;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -36,17 +39,21 @@ public class FileImportActivity extends SherlockTimeoutActivity {
     private Button cancelButton;
     private Button importButton;
     private TextView importDesc2;
-    private String importFile;
     private FileImporter fileImporter;
+    private boolean searchingForFiles;
+    private boolean prepared;
+    
+    // We search this many levels in the filesystem when looking for import files
+    private static final int FS_SEARCH_DEPTH = 3;
+    
+    private static final String IMPORT_PASSWORD_FILE_NAME = "passdroid_db.xml";
     
     private static final int IMPORT_PASSWORD_RESULT_ID = 1;
+    private static final int SELECT_FILE_RESULT_ID = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        importFile = Environment.getExternalStorageDirectory()
-                .getAbsolutePath() + "/passdroid_db.xml";
 
         this.setContentView(R.layout.file_import);
 
@@ -57,54 +64,23 @@ public class FileImportActivity extends SherlockTimeoutActivity {
                 finish();
             }
         });
-        boolean hasFile = fileExists(importFile);
 
         importButton = (Button) this.findViewById(R.id.import_button);
-
         importDesc2 = (TextView) this.findViewById(R.id.import_desc_2);
-        if (!hasFile) {
-            importDesc2.setText(getString(R.string.import_description_file_missing));
-            importDesc2.setTextColor(Color.rgb(255, 50, 50));
-        } else {
-            fileImporter = new FileImporter(importFile, Utils.getVersion(this));
-            
-            try {
-                if (fileImporter.isEncrypted()) {
-                    String desc2 = getString(R.string.import_description_encrypted_file_present, importFile);
-                    importDesc2.setText(desc2);
-                    importDesc2.setTextColor(Color.rgb(50, 150, 50));
-                    importButton.setEnabled(true);
-                    importButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            importEncrypted();
-                        } 
-                    });
-                } else {
-                    fileImporter.parse();
-                    String desc2 = formatString(
-                            getString(R.string.import_description_file_present),
-                            importFile,
-                            fileImporter.getPasswordEntries().length, "");
-                    importDesc2.setText(desc2);
-                    importDesc2.setTextColor(Color.rgb(50, 150, 50));
-                    importButton.setEnabled(true);
-                    importButton.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            importUnencrypted();
-                        } 
-                    });
-                }
-            } catch (FileImporterException ex) {
-                ex.printStackTrace();
-                String desc2 = formatString(
-                        getString(R.string.import_description_failure),
-                        importFile, 0, ex.getMessage());
-                importDesc2.setText(desc2);
-                importDesc2.setTextColor(Color.rgb(255, 150, 150));
-            }
-        }
+        
+        searchingForFiles = false;
+        prepared = false;
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	
+    	System.out.println("mager: onResume()");
+    	if (!prepared && !searchingForFiles) {
+    		searchingForFiles = true;
+    		new ImportFileFinderTask().execute();
+    	}
     }
 
     private void importEncrypted() {
@@ -134,6 +110,8 @@ public class FileImportActivity extends SherlockTimeoutActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
+        System.out.println("mager: onActivityResult()");
+        
         if (requestCode == IMPORT_PASSWORD_RESULT_ID && resultCode == RESULT_OK && data.getExtras() != null) {
             String password = data.getExtras().getString("password");
             
@@ -145,6 +123,17 @@ public class FileImportActivity extends SherlockTimeoutActivity {
             } catch (FileImporterException ex) {
                 showDialog(getString(R.string.failure), "Failed to decrypt the file. Please make sure you entered the correct password.");
             }
+        } else if (requestCode == SELECT_FILE_RESULT_ID) {
+        	if (resultCode == RESULT_OK && data.getExtras() != null) {
+        		String filename = data.getStringExtra("filename");
+        		if (filename != null) {
+        			System.out.println("mager: Found filename '" + filename + "'");
+        			prepareImport(filename);
+        		}
+        	} else {
+        		System.out.println("Missing filename");
+        		finish();
+        	}
         }
     }
     
@@ -153,7 +142,8 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         if (model.setPasswords(fileImporter.getPasswordEntries())) {
             deleteFileDialog(getString(R.string.success),
                              fileImporter.getPasswordEntries().length +
-                             " entries imported. Do you want to delete the imported file from the device?");
+                             " entries imported. Do you want to delete the imported file from the device?",
+                             fileImporter.getFilename());
         } else {
             showDialog(getString(R.string.failure), "Import failed.");
         }
@@ -173,7 +163,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         alertDialog.show();
     }
 
-    private void deleteFileDialog(String title, String message) {
+    private void deleteFileDialog(String title, String message, final String filename) {
         AlertDialog alertDialog;
 
         alertDialog = new AlertDialog.Builder(this).create();
@@ -181,7 +171,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         alertDialog.setMessage(message);
         alertDialog.setButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                new File(importFile).delete();
+                new File(filename).delete();
                 finish();
             }
         });
@@ -204,5 +194,126 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         return template.replaceAll("%f", file)
                 .replaceAll("%n", Integer.valueOf(nFiles).toString())
                 .replaceAll("%e", error);
+    }
+    
+    private void prepareImport(String filename) {
+        fileImporter = new FileImporter(filename, Utils.getVersion(FileImportActivity.this));
+        
+        try {
+            if (fileImporter.isEncrypted()) {
+                String desc2 = getString(R.string.import_description_encrypted_file_present, filename);
+                importDesc2.setText(desc2);
+                importDesc2.setTextColor(Color.rgb(50, 150, 50));
+                importButton.setEnabled(true);
+                importButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        importEncrypted();
+                    } 
+                });
+            } else {
+                fileImporter.parse();
+                String desc2 = formatString(
+                        getString(R.string.import_description_file_present),
+                        filename,
+                        fileImporter.getPasswordEntries().length, "");
+                importDesc2.setText(desc2);
+                importDesc2.setTextColor(Color.rgb(50, 150, 50));
+                importButton.setEnabled(true);
+                importButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        importUnencrypted();
+                    } 
+                });
+            }
+        } catch (FileImporterException ex) {
+            ex.printStackTrace();
+            String desc2 = formatString(
+                    getString(R.string.import_description_failure),
+                    filename, 0, ex.getMessage());
+            importDesc2.setText(desc2);
+            importDesc2.setTextColor(Color.rgb(255, 50, 50));
+        }
+        
+        prepared = true;
+    }
+    
+    private void handleMultipleFiles(List<String> files) {
+    	Intent intent = new Intent(this, FileSelectorActivity.class);
+    	
+    	String [] fileArray = new String[files.size()];
+    	files.toArray(fileArray);
+    	intent.putExtra("files", fileArray);
+    	
+    	startActivityForResult(intent, SELECT_FILE_RESULT_ID);
+    }
+    
+    private class ImportFileFinderTask extends AsyncTask<Void, Void, List<String>> {
+		@Override
+		protected List<String> doInBackground(Void... params) {
+			ArrayList<String> paths = new ArrayList<String>();
+			String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				findImportFiles(paths, Environment.getExternalStorageDirectory(), FS_SEARCH_DEPTH);
+			}
+			
+			String secondaryStorage = System.getenv("SECONDARY_STORAGE");
+			if (secondaryStorage == null) {
+				return paths;
+			}
+
+			System.out.println("Got secondary storage var: '" + secondaryStorage + "'");
+			for (String sec : secondaryStorage.split(":")) {
+				File f = new File(sec);
+				if (f.isDirectory()) {
+					findImportFiles(paths, f, FS_SEARCH_DEPTH);
+				}
+			}
+
+			return paths;
+		}
+		
+		@Override
+		protected void onPostExecute(List<String> result) {
+	    	Intent intent = new Intent(FileImportActivity.this, FileSelectorActivity.class);
+	    	
+	    	if (result.size() > 0) {
+	    		String [] fileArray = new String[result.size()];
+	    		result.toArray(fileArray);
+	    		intent.putExtra("files", fileArray);
+	    	}
+	    	
+	    	startActivityForResult(intent, SELECT_FILE_RESULT_ID);
+			
+			searchingForFiles = false;
+		}
+
+		private void findImportFiles(ArrayList<String> paths, File dir, int fsSearchDepth) {
+			System.out.println("mager: Checking for files in " + dir.getAbsolutePath() + " (" + fsSearchDepth + ")");
+			if (!dir.isDirectory()) {
+				System.out.println("mager: file is not a directory");
+				return;
+			}
+			
+			if (!dir.canRead()) {
+				System.out.println("mager: cannot read dir");
+				return;
+			}
+			
+			System.out.println(dir.getAbsolutePath() + " is a directory");
+			for (String filename : dir.list()) {
+				String absFile = dir.getAbsolutePath() + File.separator + filename;
+				File file = new File(absFile);
+
+				if (fsSearchDepth > 1 && file.isDirectory()) {
+					findImportFiles(paths, file, fsSearchDepth - 1);
+				} else if (file.isFile() && filename.equals(IMPORT_PASSWORD_FILE_NAME)) {
+					System.out.println("mager: found potential import file: " + file.getAbsolutePath());
+					paths.add(absFile);
+				}
+			}
+		}
     }
 }

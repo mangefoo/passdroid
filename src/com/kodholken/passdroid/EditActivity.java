@@ -94,7 +94,6 @@ public class EditActivity extends SherlockTimeoutActivity {
         String note = ((TextView) findViewById(R.id.note)).getText().toString();
         String url = ((TextView) findViewById(R.id.url)).getText().toString();
 
-        
         ContentValues values = new ContentValues();
 
         PasswordEntry entry = new PasswordEntry();

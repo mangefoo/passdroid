@@ -95,8 +95,7 @@ be able to read it.</string>
 This will import a database of passwords that has been exported from Passdroid. \
 The import will remove any existing passwords on this device.</string>
 
-<string name="import_description_file_present" formatted="false">\
-The file %f contains %n entries.</string>
+<string name="import_description_file_present" formatted="false">%f contains %n entries.</string>
 
 <string name="import_description_encrypted_file_present" formatted="false">\
 The file %s is encrypted.</string>
@@ -118,6 +117,7 @@ Import not available. To enable it transfer your exported password file to the d
 <string name="import_password_title">Import password</string>
 <string name="import_password_desc">The file could not be decrypted using the current master password. Please enter the master password that was in use when you exported the password database.</string>
 <string name="import_failed">Import failed.</string>
+<string name="select_import_file">Select import file</string>
 
 <!-- Generics -->
 <string name="yes">Yes</string>

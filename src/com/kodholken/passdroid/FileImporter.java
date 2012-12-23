@@ -112,6 +112,10 @@ public class FileImporter {
 
         return true;
     }
+    
+    public String getFilename() {
+    	return filename;
+    }
 
     /**
      * Tries to extract the exported file version without any XML parsing. This
