@@ -149,7 +149,8 @@ public class EditActivity extends SherlockTimeoutActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add("Save")
-        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        	.setIcon(R.drawable.ic_menu_save)
+        	.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         return super.onCreateOptionsMenu(menu);
     }
