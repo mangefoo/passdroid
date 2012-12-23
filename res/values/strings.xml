@@ -118,6 +118,7 @@ Import not available. To enable it transfer your exported password file to the d
 <string name="import_password_desc">The file could not be decrypted using the current master password. Please enter the master password that was in use when you exported the password database.</string>
 <string name="import_failed">Import failed.</string>
 <string name="select_import_file">Select import file</string>
+<string name="import_searching">Searching for files\u2026</string>
 
 <!-- Generics -->
 <string name="yes">Yes</string>

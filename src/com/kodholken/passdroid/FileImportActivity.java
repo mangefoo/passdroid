@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,9 +34,12 @@ import android.os.Environment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FileImportActivity extends SherlockTimeoutActivity {
+	private LinearLayout importLayout;
+	private LinearLayout searchingLayout;
     private Button cancelButton;
     private Button importButton;
     private TextView importDesc2;
@@ -56,6 +60,9 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         super.onCreate(savedInstanceState);
 
         this.setContentView(R.layout.file_import);
+        
+        importLayout = (LinearLayout) findViewById(R.id.import_layout);
+        searchingLayout = (LinearLayout) findViewById(R.id.searching_layout);
 
         cancelButton = (Button) this.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(new OnClickListener() {
@@ -76,7 +83,6 @@ public class FileImportActivity extends SherlockTimeoutActivity {
     protected void onResume() {
     	super.onResume();
     	
-    	System.out.println("mager: onResume()");
     	if (!prepared && !searchingForFiles) {
     		searchingForFiles = true;
     		new ImportFileFinderTask().execute();
@@ -110,7 +116,8 @@ public class FileImportActivity extends SherlockTimeoutActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        System.out.println("mager: onActivityResult()");
+        searchingLayout.setVisibility(View.GONE);
+        importLayout.setVisibility(View.VISIBLE);
         
         if (requestCode == IMPORT_PASSWORD_RESULT_ID && resultCode == RESULT_OK && data.getExtras() != null) {
             String password = data.getExtras().getString("password");
@@ -127,11 +134,12 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         	if (resultCode == RESULT_OK && data.getExtras() != null) {
         		String filename = data.getStringExtra("filename");
         		if (filename != null) {
-        			System.out.println("mager: Found filename '" + filename + "'");
         			prepareImport(filename);
         		}
         	} else {
-        		System.out.println("Missing filename");
+        		// Something went wrong when selecting import file or the 
+        		// user pressed the back button. Since we don't have any
+        		// import file to work with we close down.
         		finish();
         	}
         }
@@ -155,7 +163,7 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
-        alertDialog.setButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
@@ -169,24 +177,19 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
-        alertDialog.setButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+        alertDialog.setButton(Dialog.BUTTON_POSITIVE, getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 new File(filename).delete();
                 finish();
             }
         });
-        alertDialog.setButton2(getString(R.string.no), new DialogInterface.OnClickListener() {
+        alertDialog.setButton(Dialog.BUTTON_NEGATIVE, getString(R.string.no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }
         });
 
         alertDialog.show();
-    }
-
-    private final boolean fileExists(String filename) {
-        File f = new File(filename);
-        return f.isFile();
     }
 
     private String formatString(String template, String file, int nFiles,
@@ -239,32 +242,23 @@ public class FileImportActivity extends SherlockTimeoutActivity {
         prepared = true;
     }
     
-    private void handleMultipleFiles(List<String> files) {
-    	Intent intent = new Intent(this, FileSelectorActivity.class);
-    	
-    	String [] fileArray = new String[files.size()];
-    	files.toArray(fileArray);
-    	intent.putExtra("files", fileArray);
-    	
-    	startActivityForResult(intent, SELECT_FILE_RESULT_ID);
-    }
-    
     private class ImportFileFinderTask extends AsyncTask<Void, Void, List<String>> {
 		@Override
 		protected List<String> doInBackground(Void... params) {
 			ArrayList<String> paths = new ArrayList<String>();
-			String dir = Environment.getExternalStorageDirectory().getAbsolutePath();
 
 			if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 				findImportFiles(paths, Environment.getExternalStorageDirectory(), FS_SEARCH_DEPTH);
 			}
 			
+			// This variable is present on, at least, some Samsung devices and is a 
+			// colon separated list with paths to "secondary" storage such as removeable
+			// SD cards and external USB drives.
 			String secondaryStorage = System.getenv("SECONDARY_STORAGE");
 			if (secondaryStorage == null) {
 				return paths;
 			}
 
-			System.out.println("Got secondary storage var: '" + secondaryStorage + "'");
 			for (String sec : secondaryStorage.split(":")) {
 				File f = new File(sec);
 				if (f.isDirectory()) {
@@ -291,18 +285,14 @@ public class FileImportActivity extends SherlockTimeoutActivity {
 		}
 
 		private void findImportFiles(ArrayList<String> paths, File dir, int fsSearchDepth) {
-			System.out.println("mager: Checking for files in " + dir.getAbsolutePath() + " (" + fsSearchDepth + ")");
 			if (!dir.isDirectory()) {
-				System.out.println("mager: file is not a directory");
 				return;
 			}
 			
 			if (!dir.canRead()) {
-				System.out.println("mager: cannot read dir");
 				return;
 			}
 			
-			System.out.println(dir.getAbsolutePath() + " is a directory");
 			for (String filename : dir.list()) {
 				String absFile = dir.getAbsolutePath() + File.separator + filename;
 				File file = new File(absFile);
@@ -310,7 +300,6 @@ public class FileImportActivity extends SherlockTimeoutActivity {
 				if (fsSearchDepth > 1 && file.isDirectory()) {
 					findImportFiles(paths, file, fsSearchDepth - 1);
 				} else if (file.isFile() && filename.equals(IMPORT_PASSWORD_FILE_NAME)) {
-					System.out.println("mager: found potential import file: " + file.getAbsolutePath());
 					paths.add(absFile);
 				}
 			}

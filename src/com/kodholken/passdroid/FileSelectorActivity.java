@@ -206,10 +206,6 @@ public class FileSelectorActivity extends SherlockTimeoutListActivity {
 			this.files = files;
 		}
     	
-    	public ArrayList<File> getFiles() {
-			return files;
-		}
-    	
     	public void setShowFullPath(boolean showFullPath) {
 			this.showFullPath = showFullPath;
 		}
@@ -219,7 +215,7 @@ public class FileSelectorActivity extends SherlockTimeoutListActivity {
 			if (files == null) {
 				return 0;
 			}
-			System.out.println("Count returning: " + files.size());
+
 			return files.size();
 		}
 
@@ -274,7 +270,6 @@ public class FileSelectorActivity extends SherlockTimeoutListActivity {
 	    	ImageView icon;
 	        TextView  filename;
 	        TextView  date;
-	        TextView  size;
 	    }
     }
 }
