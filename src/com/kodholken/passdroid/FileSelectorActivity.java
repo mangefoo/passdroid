@@ -171,10 +171,21 @@ public class FileSelectorActivity extends SherlockTimeoutListActivity {
     			list.add(new File(currentDir + File.separator + ".."));
     		}
 
+    		// Some implementations are missing File.canExecute()
+    		boolean haveCanExecute = true;
+    		try {
+    			new File("/").canExecute();
+    		} catch (NoSuchMethodError ex) {
+    			haveCanExecute = false;
+    		}
+
     		for (String file : dir.list()) {
     			File f = new File(currentDir + File.separator + file);
-    			if (f.isDirectory() && f.canRead() && f.canExecute()) {
-    				list.add(f);
+				// Only show directories we can read
+    			if (f.isDirectory() && f.canRead()) {
+    				if (!haveCanExecute || f.canExecute()) {
+    					list.add(f);
+    				}
     			} else if (f.isFile() && f.canRead()) {
     				list.add(f);
     			}
