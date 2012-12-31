@@ -293,7 +293,13 @@ public class FileImportActivity extends SherlockTimeoutActivity {
 				return;
 			}
 			
-			for (String filename : dir.list()) {
+			// Apparently dir.list() can return null even though the dir.isDirectory() returned true
+			String [] filenames = dir.list();
+			if (filenames == null) {
+				return;
+			}
+
+			for (String filename : filenames) {
 				String absFile = dir.getAbsolutePath() + File.separator + filename;
 				File file = new File(absFile);
 
