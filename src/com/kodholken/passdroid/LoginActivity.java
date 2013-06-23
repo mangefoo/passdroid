@@ -125,7 +125,7 @@ public class LoginActivity extends Activity {
 
     /**
      * Handler for when the user press the login button after entering the
-     * master password. If the correct password is entered we flat the user as
+     * master password. If the correct password is entered we flag the user as
      * logged in and return control to the MainActivity which will launch the
      * 
      */
