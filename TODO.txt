@@ -1,9 +1,0 @@
-Bugs:
-- Fix problem with automatic logout during adding of new password
-
-Fixes:
-- Check for empty passwords
-
-Features:
-- Add support for generating passwords automatically
-- Add categories
